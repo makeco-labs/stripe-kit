@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import assert from 'node:assert/strict';
 import chalk from 'chalk';
 import { Command, Option } from 'commander';
 
@@ -15,12 +16,11 @@ import { createContext } from './context';
 import {
   ACTION_REQUIREMENTS,
   ACTIONS,
-  ENVIRONMENTS,
   VALID_ENVIRONMENTS,
 } from './definitions';
 import { loadEnvironment } from './environment';
 import {
-  confirmProductionOperation,
+  requireProductionConfirmation,
   determineAction,
   determineAdapter,
   determineEnvironment,
@@ -44,10 +44,10 @@ setupSignalHandlers();
 async function executeAction(input: {
   action: ActionKey;
   config: Config;
-  envName?: EnvironmentKey;
+  env?: EnvironmentKey;
   adapter?: DatabaseAdapter;
 }): Promise<void> {
-  const { action, config, envName, adapter } = input;
+  const { action, config, env, adapter } = input;
 
   // url doesn't need context
   if (action === ACTIONS.URL) {
@@ -65,29 +65,22 @@ async function executeAction(input: {
 
   const ctx = createContext({ adapter, config });
 
+  // Assert that env is defined for actions that need it
+  assert(env !== undefined, 'Environment must be defined for this action');
+
   switch (action) {
     case ACTIONS.CREATE:
-      if (envName === ENVIRONMENTS.PROD) {
-        const confirmed = await confirmProductionOperation({
-          action: 'create plans',
-          env: envName,
-        });
-        if (!confirmed) {
-          process.exit(0);
-        }
-      }
+      await requireProductionConfirmation({
+        action: 'create plans',
+        env,
+      });
       await ensureStripeSubscriptionPlans(ctx, { plans: config.plans });
       break;
     case ACTIONS.ARCHIVE: {
-      if (envName === ENVIRONMENTS.PROD) {
-        const confirmed = await confirmProductionOperation({
-          action: 'archive plans',
-          env: envName,
-        });
-        if (!confirmed) {
-          process.exit(0);
-        }
-      }
+      await requireProductionConfirmation({
+        action: 'archive plans',
+        env,
+      });
       const productIdsToDelete = config.productIds
         ? Object.values(config.productIds)
         : config.plans.map((plan: { id: string }) => plan.id);
@@ -182,7 +175,7 @@ program
       await executeAction({
         action: chosenAction,
         config,
-        envName: chosenEnv,
+        env: chosenEnv,
         adapter: selectedAdapter,
       });
 

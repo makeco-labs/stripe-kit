@@ -205,16 +205,17 @@ export async function determineAdapter(input: {
 // ========================================================================
 
 /**
- * Confirms dangerous operations in production environment
+ * Requires confirmation for dangerous operations in production environment
+ * Exits the process if not confirmed, otherwise continues execution
  */
-export async function confirmProductionOperation(input: {
+export async function requireProductionConfirmation(input: {
   action: string;
   env: EnvironmentKey;
-}): Promise<boolean> {
+}): Promise<void> {
   const { action, env } = input;
 
   if (env !== ENVIRONMENTS.PROD) {
-    return true;
+    return;
   }
 
   console.log(
@@ -243,12 +244,10 @@ export async function confirmProductionOperation(input: {
 
     if (!response.value) {
       console.log(chalk.yellow('\\nOperation canceled for safety.'));
-      return false;
+      process.exit(0);
     }
-
-    return true;
   } catch (error) {
     console.error(chalk.red('Error during confirmation prompt:'), error);
-    return false;
+    process.exit(1);
   }
 }
