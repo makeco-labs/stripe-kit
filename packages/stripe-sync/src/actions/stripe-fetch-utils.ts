@@ -2,6 +2,7 @@ import type Stripe from 'stripe';
 
 import type { Context, WithClient } from '../types';
 
+// ------------------ FETCH STRIPE PRODUCTS ------------------
 export async function fetchStripeProducts(
   ctx: WithClient<Context>
 ): Promise<Stripe.Product[]> {
@@ -33,6 +34,7 @@ export async function fetchStripeProducts(
   return allStripeProducts;
 }
 
+// ------------------ FETCH STRIPE PRICES ------------------
 export async function fetchStripePrices(
   ctx: WithClient<Context>
 ): Promise<Stripe.Price[]> {

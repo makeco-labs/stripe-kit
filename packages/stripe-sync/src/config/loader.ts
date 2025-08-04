@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 import type { StripeSyncConfig } from './config.schemas';
 import { stripeSyncConfigSchema } from './config.schemas';

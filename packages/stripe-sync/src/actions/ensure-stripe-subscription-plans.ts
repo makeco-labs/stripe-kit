@@ -3,6 +3,7 @@ import type Stripe from 'stripe';
 import type { SubscriptionPlan } from '../config';
 import type { Context, WithClient } from '../types';
 
+// ------------------ FIND PRODUCT BY INTERNAL ID ------------------
 async function findProductByInternalId(
   stripe: Stripe,
   internalProductId: string
@@ -16,6 +17,7 @@ async function findProductByInternalId(
   return product ? product : null;
 }
 
+// ------------------ FIND PRICE BY INTERNAL ID ------------------
 async function findPriceByInternalId(
   stripe: Stripe,
   internalPriceId: string,
@@ -30,6 +32,7 @@ async function findPriceByInternalId(
   return price ? price : null;
 }
 
+// ------------------ ENSURE STRIPE SUBSCRIPTION PLANS ------------------
 export async function ensureStripeSubscriptionPlans(
   ctx: WithClient<Context>,
   input: { plans: SubscriptionPlan[] }

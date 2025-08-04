@@ -1,6 +1,7 @@
 import type { Context, WithClient } from '../types';
 import { fetchStripePrices, fetchStripeProducts } from './stripe-fetch-utils';
 
+// ------------------ ARCHIVE STRIPE PRODUCTS ------------------
 async function archiveStripeProducts(
   ctx: WithClient<Context>,
   input: {
@@ -40,6 +41,7 @@ async function archiveStripeProducts(
   }
 }
 
+// ------------------ ARCHIVE STRIPE PRICES ------------------
 async function archiveStripePrices(
   ctx: WithClient<Context>,
   input: {
@@ -79,6 +81,7 @@ async function archiveStripePrices(
   }
 }
 
+// ------------------ ARCHIVE STRIPE SUBSCRIPTION PLANS ------------------
 export async function archiveStripeSubscriptionPlans(
   ctx: WithClient<Context>,
   input: {

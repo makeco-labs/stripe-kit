@@ -9,8 +9,9 @@ import { loadStripeSyncConfig } from '../config';
 import {
   archiveStripeSubscriptionPlans,
   ensureStripeSubscriptionPlans,
-  fetchStripePrices,
-  fetchStripeProducts,
+  listStripePrices,
+  listStripeProducts,
+  showStripeDashboardUrl,
 } from '../actions';
 import type { StripeSyncConfig } from '../config';
 import type { Context, WithClient } from '../types';
@@ -107,93 +108,6 @@ function createContext(
   };
 }
 
-// ========================================================================
-// ACTION IMPLEMENTATIONS
-// ========================================================================
-
-/**
- * Shows the Stripe dashboard URL
- */
-function showStripeDashboardUrl(): void {
-  console.log(
-    chalk.blue(
-      'Stripe Dashboard URL: https://dashboard.stripe.com/test/products?active=true'
-    )
-  );
-}
-
-/**
- * Lists Stripe products
- */
-// biome-ignore lint/suspicious/noExplicitAny: Context type from createContext
-async function listProducts(ctx: any): Promise<void> {
-  try {
-    const products = await fetchStripeProducts(ctx);
-
-    if (products.length === 0) {
-      ctx.logger.info('No products found in Stripe.');
-      return;
-    }
-
-    ctx.logger.info(`Found ${products.length} products in Stripe:`);
-    for (const product of products) {
-      console.log(chalk.green(`ID: ${chalk.bold(product.id)}`));
-      console.log(`  Name: ${product.name}`);
-      console.log(`  Active: ${product.active}`);
-      console.log(`  Description: ${product.description || 'N/A'}`);
-      console.log(
-        `  Internal ID: ${product.metadata?.internal_product_id || 'N/A'}`
-      );
-      console.log('');
-    }
-  } catch (error) {
-    ctx.logger.error('Error listing products:', error);
-    throw error;
-  }
-}
-
-/**
- * Lists Stripe prices
- */
-// biome-ignore lint/suspicious/noExplicitAny: Context type from createContext
-async function listPrices(ctx: any): Promise<void> {
-  try {
-    const prices = await fetchStripePrices(ctx);
-
-    if (prices.length === 0) {
-      ctx.logger.info('No prices found in Stripe.');
-      return;
-    }
-
-    ctx.logger.info(`Found ${prices.length} prices in Stripe:`);
-    for (const price of prices) {
-      console.log(chalk.green(`ID: ${chalk.bold(price.id)}`));
-      console.log(`  Product: ${price.product}`);
-      console.log(`  Active: ${price.active}`);
-      console.log(`  Currency: ${price.currency.toUpperCase()}`);
-      console.log(`  Type: ${price.type}`);
-
-      if (price.type === 'recurring') {
-        console.log(`  Interval: ${price.recurring?.interval}`);
-        console.log(`  Interval Count: ${price.recurring?.interval_count}`);
-      }
-
-      if (typeof price.unit_amount === 'number') {
-        console.log(
-          `  Amount: ${(price.unit_amount / 100).toFixed(2)} ${price.currency.toUpperCase()}`
-        );
-      }
-
-      console.log(
-        `  Internal ID: ${price.metadata?.internal_price_id || 'N/A'}`
-      );
-      console.log('');
-    }
-  } catch (error) {
-    ctx.logger.error('Error listing prices:', error);
-    throw error;
-  }
-}
 
 // ========================================================================
 // MAIN ACTION HANDLER
@@ -289,9 +203,9 @@ async function handleAction(
         ctx.logger.info('Clear DB plans operation not yet implemented');
         break;
       case ACTIONS.LIST_PRODUCTS:
-        return await listProducts(ctx);
+        return await listStripeProducts(ctx);
       case ACTIONS.LIST_PRICES:
-        return await listPrices(ctx);
+        return await listStripePrices(ctx);
       default:
         console.error(
           chalk.red(`Internal error: Unhandled action '${chosenAction}'`)
