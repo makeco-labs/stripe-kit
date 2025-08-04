@@ -1,0 +1,35 @@
+# Development files
+__tests__/
+*.test.ts
+*.spec.ts
+vitest.config.ts
+tsconfig.json
+tsconfig.build.json
+
+# Build artifacts
+src/
+*.tsbuildinfo
+
+# Environment files
+.env*
+!.env.example
+
+# Development dependencies
+node_modules/
+bun.lock
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db

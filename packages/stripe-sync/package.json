@@ -1,0 +1,81 @@
+{
+  "name": "@makeco/stripe-sync",
+  "version": "0.1.0",
+  "author": "makeco",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makeco/stripe-sync.git"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "stripe-cmd": "./dist/cli/main.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/makeco/stripe-sync/issues"
+  },
+  "description": "A configurable CLI tool for managing Stripe subscription plans and billing operations",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "homepage": "https://github.com/makeco/stripe-sync",
+  "keywords": [
+    "stripe",
+    "billing",
+    "subscription",
+    "cli",
+    "payments",
+    "typescript",
+    "saas"
+  ],
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "bun clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "dev:typecheck": "bun typecheck --watch --preserveWatchOutput",
+    "lint": "npx ultracite@latest lint",
+    "format": "bunx ultracite@latest format",
+    "test": "vitest",
+    "ci": "bun run lint && bun run typecheck && bun run build && bun run test --run",
+    "git": "bun run ci && git add . && git commit -m",
+    "postgit": "git push --all"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/prompts": "^2.4.9",
+    "eslint": "^9.29.0",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3",
+    "ultracite": "^5.1.2",
+    "vitest": "^3.2.4"
+  },
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.0.3",
+    "prompts": "^2.4.2",
+    "stripe": "^18.4.0",
+    "zod": "^4.0.14"
+  },
+  "peerDependencies": {
+    "drizzle-orm": ">=0.40.0"
+  }
+}

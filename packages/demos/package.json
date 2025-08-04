@@ -1,0 +1,15 @@
+{
+  "name": "@makeco/stripe-sync-demos",
+  "version": "1.0.0",
+  "description": "Example project using @makeco/stripe-sync",
+  "type": "module",
+  "scripts": {
+    "stripe": "stripe-sync create --env test"
+  },
+  "dependencies": {
+    "@makeco/stripe-sync": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

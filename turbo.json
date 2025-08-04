@@ -5,13 +5,26 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "clean": {
+      "cache": false
     },
     "lint": {
-      "dependsOn": ["^lint"]
+			"outputs": []
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "format": {
+			"outputs": []
+		},
+    "typecheck": {
+			"outputs": []
+    },
+    "ci": {
+      "dependsOn": ["lint", "typecheck", "build", "test"]
+    },
+    "test": {
+      "outputs": [],
+			"cache": false
     },
     "dev": {
       "cache": false,

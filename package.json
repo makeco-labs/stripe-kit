@@ -1,24 +1,31 @@
 {
-  "name": "stripe-cmd",
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
-  },
-  "devDependencies": {
-    "prettier": "^3.6.2",
-    "turbo": "^2.5.5",
-    "typescript": "5.8.3"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "bun@1.2.17",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+	"name": "@makeco/stripe-sync",
+	"module": "index.ts",
+	"type": "module",
+	"private": false,
+	"packageManager": "bun@1.2.17",
+	"workspaces": [
+		"packages/**"
+	],
+	"scripts": {
+		"clean": "turbo run clean",
+		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"lint": "turbo run lint",
+		"typecheck": "turbo run typecheck",
+		"format": "turbo run format",
+		"test": "turbo run test",
+		"ci": "turbo run ci",
+		"git": "bun run ci && git add . && git commit -m",
+		"postgit": "git push --all"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.2",
+		"turbo": "^2.5.5",
+		"typescript": "5.8.3",
+		"ultracite": "5.1.2"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }
