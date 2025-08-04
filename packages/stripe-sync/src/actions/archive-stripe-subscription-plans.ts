@@ -1,9 +1,9 @@
-import type { Context, WithClient } from '../types';
+import type { Context } from '@/types';
 import { fetchStripePrices, fetchStripeProducts } from './stripe-fetch-utils';
 
 // ------------------ ARCHIVE STRIPE PRODUCTS ------------------
 async function archiveStripeProducts(
-  ctx: WithClient<Context>,
+  ctx: Context,
   input: {
     internalProductIds: string[];
   }
@@ -27,7 +27,7 @@ async function archiveStripeProducts(
 
   for (const product of productsToArchive) {
     try {
-      await ctx.payment.stripeClient.products.update(product.id, {
+      await ctx.stripeClient.products.update(product.id, {
         active: false,
       });
       ctx.logger.info(`Archived product in Stripe: ${product.id}`);
@@ -43,7 +43,7 @@ async function archiveStripeProducts(
 
 // ------------------ ARCHIVE STRIPE PRICES ------------------
 async function archiveStripePrices(
-  ctx: WithClient<Context>,
+  ctx: Context,
   input: {
     internalProductIds: string[];
   }
@@ -67,7 +67,7 @@ async function archiveStripePrices(
 
   for (const price of pricesToArchive) {
     try {
-      await ctx.payment.stripeClient.prices.update(price.id, {
+      await ctx.stripeClient.prices.update(price.id, {
         active: false,
       });
       ctx.logger.info(`Archived price in Stripe: ${price.id}`);
@@ -83,7 +83,7 @@ async function archiveStripePrices(
 
 // ------------------ ARCHIVE STRIPE SUBSCRIPTION PLANS ------------------
 export async function archiveStripeSubscriptionPlans(
-  ctx: WithClient<Context>,
+  ctx: Context,
   input: {
     internalProductIds: string[];
   }

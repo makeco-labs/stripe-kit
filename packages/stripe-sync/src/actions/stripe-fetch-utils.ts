@@ -1,15 +1,11 @@
 import type Stripe from 'stripe';
 
-import type { Context, WithClient } from '../types';
+import type { Context } from '@/types';
 
 // ------------------ FETCH STRIPE PRODUCTS ------------------
 export async function fetchStripeProducts(
-  ctx: WithClient<Context>
+  ctx: Context
 ): Promise<Stripe.Product[]> {
-  if (!ctx.payment.stripeClient) {
-    throw new Error('Stripe client not found');
-  }
-
   ctx.logger.info('Fetching products from Stripe...');
 
   let hasMore = true;
@@ -17,7 +13,7 @@ export async function fetchStripeProducts(
   let allStripeProducts: Stripe.Product[] = [];
 
   while (hasMore) {
-    const response = await ctx.payment.stripeClient.products.list({
+    const response = await ctx.stripeClient.products.list({
       limit: 100,
       starting_after: startingAfter,
     });
@@ -35,13 +31,7 @@ export async function fetchStripeProducts(
 }
 
 // ------------------ FETCH STRIPE PRICES ------------------
-export async function fetchStripePrices(
-  ctx: WithClient<Context>
-): Promise<Stripe.Price[]> {
-  if (!ctx.payment.stripeClient) {
-    throw new Error('Stripe client not found');
-  }
-
+export async function fetchStripePrices(ctx: Context): Promise<Stripe.Price[]> {
   ctx.logger.info('Fetching prices from Stripe...');
 
   let hasMore = true;
@@ -49,7 +39,7 @@ export async function fetchStripePrices(
   let allStripePrices: Stripe.Price[] = [];
 
   while (hasMore) {
-    const response = await ctx.payment.stripeClient.prices.list({
+    const response = await ctx.stripeClient.prices.list({
       limit: 100,
       starting_after: startingAfter,
     });

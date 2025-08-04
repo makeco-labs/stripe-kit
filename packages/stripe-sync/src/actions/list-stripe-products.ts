@@ -1,12 +1,11 @@
 import chalk from 'chalk';
-
-import type { Context, WithClient } from '../types';
+import type { Context } from '@/types';
 import { fetchStripeProducts } from './stripe-fetch-utils';
 
 /**
  * Lists Stripe products
  */
-export async function listStripeProducts(ctx: WithClient<Context>): Promise<void> {
+export async function listStripeProducts(ctx: Context): Promise<void> {
   try {
     const products = await fetchStripeProducts(ctx);
 

@@ -3,29 +3,81 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { z } from 'zod';
 
-import type { StripeSyncConfig } from './config.schemas';
-import { stripeSyncConfigSchema } from './config.schemas';
+import type { Config } from './schemas';
+import { configSchema } from './schemas';
 
-export async function loadStripeSyncConfig(
-  configPath?: string
-): Promise<StripeSyncConfig> {
+// ========================================================================
+// CONFIG DISCOVERY FUNCTIONS
+// ========================================================================
+
+/**
+ * Discovers stripe config file in the current working directory
+ */
+export function discoverStripeConfig(): string | null {
+  const configPatterns = [
+    'stripe.config.ts',
+    'stripe.config.js',
+    'stripe.config.mjs',
+  ];
   const cwd = process.cwd();
-  const defaultConfigPath = path.join(cwd, 'stripe.config.ts');
-  const finalConfigPath = configPath || defaultConfigPath;
 
-  if (!fs.existsSync(finalConfigPath)) {
-    throw new Error(`Stripe config file not found at: ${finalConfigPath}`);
+  for (const pattern of configPatterns) {
+    const configPath = path.join(cwd, pattern);
+    if (fs.existsSync(configPath)) {
+      return configPath;
+    }
+  }
+  return null;
+}
+
+/**
+ * Loads and parses a stripe config file
+ */
+export async function loadConfig(input: {
+  configPath?: string;
+}): Promise<Config> {
+  const { configPath } = input;
+  let resolvedConfigPath: string;
+
+  if (configPath) {
+    // User provided a specific config path
+    resolvedConfigPath = path.resolve(configPath);
+  } else {
+    // Auto-discovery: look for stripe.config files
+    const discoveredConfig = discoverStripeConfig();
+    if (!discoveredConfig) {
+      console.error('❌ Error: No stripe.config.ts file found.');
+      console.error(
+        'Expected files: stripe.config.ts, stripe.config.js, or stripe.config.mjs'
+      );
+      console.error('Or specify a config file with --config flag');
+      console.error('');
+      console.error('Example stripe.config.ts:');
+      console.error(`import { defineConfig } from 'stripe-sync';`);
+      console.error('export default defineConfig({');
+      console.error('  plans: [...],');
+      console.error('  adapters: {...},');
+      console.error('  envFiles: {...}');
+      console.error('});');
+      process.exit(1);
+    }
+    resolvedConfigPath = discoveredConfig;
+  }
+
+  // Check if file exists
+  if (!fs.existsSync(resolvedConfigPath)) {
+    throw new Error(`Stripe config file not found at: ${resolvedConfigPath}`);
   }
 
   try {
     // Convert to file URL for dynamic import
-    const configUrl = pathToFileURL(finalConfigPath).href;
+    const configUrl = pathToFileURL(resolvedConfigPath).href;
     const configModule = await import(configUrl);
 
     const config = configModule.default || configModule;
 
     // Validate the configuration
-    const validatedConfig = stripeSyncConfigSchema.parse(config);
+    const validatedConfig = configSchema.parse(config);
 
     return validatedConfig;
   } catch (error) {
@@ -34,28 +86,10 @@ export async function loadStripeSyncConfig(
       const errorMessages = error.issues.map(
         (err) => `${err.path.join('.')}: ${err.message}`
       );
-      throw new Error(`Invalid stripe.config.ts:\n${errorMessages.join('\n')}`);
+      throw new Error(
+        `Invalid stripe config file:\n${errorMessages.join('\n')}`
+      );
     }
-    throw new Error(`Failed to load stripe.config.ts: ${error}`);
+    throw new Error(`Failed to load stripe config file: ${error}`);
   }
-}
-
-export function getDefaultEnvironments() {
-  return {
-    test: { envFile: '.env.test' },
-    dev: { envFile: '.env.dev' },
-    staging: { envFile: '.env.staging' },
-    prod: { envFile: '.env.prod' },
-  };
-}
-
-/**
- * Defines a type-safe Stripe Sync configuration object
- * @param config - The configuration object
- * @returns The validated configuration
- */
-export function defineConfig(config: StripeSyncConfig): StripeSyncConfig {
-  // Validate the configuration at runtime
-  const validatedConfig = stripeSyncConfigSchema.parse(config);
-  return validatedConfig;
 }

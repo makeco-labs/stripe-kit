@@ -1,13 +1,16 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
-import type { ActionKey, DialectKey, EnvironmentKey } from './definitions';
+
 import {
   ACTION_DESCRIPTIONS,
+  ENVIRONMENTS,
   VALID_ACTIONS,
-  VALID_DIALECTS,
   VALID_ENVIRONMENTS,
 } from './definitions';
 import { onCancel } from './signals';
+
+import type { DatabaseAdapter } from '../config/schemas';
+import type { ActionKey, EnvironmentKey } from './definitions';
 
 // ========================================================================
 // ENVIRONMENT PROMPTS
@@ -16,9 +19,11 @@ import { onCancel } from './signals';
 /**
  * Determines the environment to be used, either from input or via interactive prompt
  */
-export async function determineEnvironment(
-  envInput?: EnvironmentKey
-): Promise<EnvironmentKey> {
+export async function determineEnvironment(input: {
+  envInput?: EnvironmentKey;
+}): Promise<EnvironmentKey> {
+  const { envInput } = input;
+
   if (envInput && VALID_ENVIRONMENTS.includes(envInput)) {
     console.log(
       chalk.green(`Environment specified via flag: ${chalk.bold(envInput)}`)
@@ -33,10 +38,10 @@ export async function determineEnvironment(
         name: 'value',
         message: chalk.blue('Select the target environment:'),
         choices: [
-          { title: 'Test Environment', value: 'test' },
-          { title: 'Development Server', value: 'dev' },
-          { title: 'Staging Environment', value: 'staging' },
-          { title: 'Production Environment', value: 'prod' },
+          { title: 'Test', value: 'test' },
+          { title: 'Development', value: 'dev' },
+          { title: 'Staging', value: 'staging' },
+          { title: 'Production', value: 'prod' },
         ],
         initial: 0, // Default to 'test' for safety
       },
@@ -67,9 +72,11 @@ export async function determineEnvironment(
 /**
  * Determines the action to be performed, either from input or via interactive prompt
  */
-export async function determineAction(
-  actionInput?: string
-): Promise<ActionKey> {
+export async function determineAction(input: {
+  actionInput?: string;
+}): Promise<ActionKey> {
+  const { actionInput } = input;
+
   if (actionInput && VALID_ACTIONS.includes(actionInput as ActionKey)) {
     const action = actionInput as ActionKey;
     console.log(
@@ -115,33 +122,65 @@ export async function determineAction(
 }
 
 // ========================================================================
-// DIALECT PROMPTS
+// ADAPTER PROMPTS
 // ========================================================================
 
 /**
- * Determines the database dialect, either from input or via interactive prompt
+ * Determines the database adapter, either from input or via interactive prompt.
+ * Implements smart selection logic:
+ * - 1 adapter: Auto-select silently
+ * - Multiple adapters + flag: Use specified adapter
+ * - Multiple adapters + no flag: Interactive prompt
  */
-export async function determineDialect(
-  dialectInput?: DialectKey
-): Promise<DialectKey> {
-  if (dialectInput && VALID_DIALECTS.includes(dialectInput)) {
-    console.log(
-      chalk.green(`Dialect specified via flag: ${chalk.bold(dialectInput)}`)
-    );
-    return dialectInput;
+export async function determineAdapter(input: {
+  adapterInput: string | undefined;
+  availableAdapters: Record<string, DatabaseAdapter>;
+}): Promise<{ name: string; adapter: DatabaseAdapter }> {
+  const { adapterInput, availableAdapters } = input;
+  const adapterNames = Object.keys(availableAdapters);
+
+  // Smart selection logic
+  if (adapterNames.length === 0) {
+    console.error(chalk.red('No adapters found in configuration'));
+    process.exit(1);
   }
 
+  if (adapterNames.length === 1) {
+    // Auto-select the only adapter
+    const adapterName = adapterNames[0];
+    console.log(
+      chalk.green(`Auto-selected adapter: ${chalk.bold(adapterName)}`)
+    );
+    return { name: adapterName, adapter: availableAdapters[adapterName] };
+  }
+
+  // Multiple adapters available
+  if (adapterInput) {
+    if (availableAdapters[adapterInput]) {
+      console.log(
+        chalk.green(`Adapter specified via flag: ${chalk.bold(adapterInput)}`)
+      );
+      return { name: adapterInput, adapter: availableAdapters[adapterInput] };
+    }
+    console.log(
+      chalk.yellow(
+        `Invalid adapter specified: "${adapterInput}". Available: ${adapterNames.join(', ')}`
+      )
+    );
+  }
+
+  // Interactive prompt for multiple adapters
   try {
     const response = await prompts(
       {
         type: 'select',
         name: 'value',
-        message: chalk.blue('Select the target database dialect:'),
-        choices: VALID_DIALECTS.map((dialect) => ({
-          title: dialect.charAt(0).toUpperCase() + dialect.slice(1),
-          value: dialect,
+        message: chalk.blue('Select the database adapter:'),
+        choices: adapterNames.map((name) => ({
+          title: name.charAt(0).toUpperCase() + name.slice(1),
+          value: name,
         })),
-        initial: 0, // Default to sqlite
+        initial: 0,
       },
       { onCancel }
     );
@@ -152,11 +191,11 @@ export async function determineDialect(
     }
 
     console.log(
-      chalk.green(`Dialect selected via prompt: ${chalk.bold(response.value)}`)
+      chalk.green(`Adapter selected via prompt: ${chalk.bold(response.value)}`)
     );
-    return response.value;
+    return { name: response.value, adapter: availableAdapters[response.value] };
   } catch (error) {
-    console.error(chalk.red('Error during dialect prompt:'), error);
+    console.error(chalk.red('Error during adapter prompt:'), error);
     process.exit(1);
   }
 }
@@ -168,11 +207,13 @@ export async function determineDialect(
 /**
  * Confirms dangerous operations in production environment
  */
-export async function confirmProductionOperation(
-  action: string,
-  env: EnvironmentKey
-): Promise<boolean> {
-  if (env !== 'prod') {
+export async function confirmProductionOperation(input: {
+  action: string;
+  env: EnvironmentKey;
+}): Promise<boolean> {
+  const { action, env } = input;
+
+  if (env !== ENVIRONMENTS.PROD) {
     return true;
   }
 

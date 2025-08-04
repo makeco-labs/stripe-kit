@@ -53,29 +53,6 @@ export const VALID_ENVIRONMENTS = Object.values(ENVIRONMENTS);
 export type EnvironmentKey = (typeof ENVIRONMENTS)[keyof typeof ENVIRONMENTS];
 
 // ========================================================================
-// DIALECT DEFINITIONS
-// ========================================================================
-
-/**
- * Available database dialects as const for type safety
- */
-export const DIALECTS = {
-  SQLITE: 'sqlite',
-  POSTGRES: 'postgres',
-  TURSO: 'turso',
-} as const;
-
-/**
- * Array of valid dialect values for validation
- */
-export const VALID_DIALECTS = Object.values(DIALECTS);
-
-/**
- * Type derived from the DIALECTS const
- */
-export type DialectKey = (typeof DIALECTS)[keyof typeof DIALECTS];
-
-// ========================================================================
 // ACTION DESCRIPTIONS
 // ========================================================================
 
@@ -103,16 +80,16 @@ export const ACTION_DESCRIPTIONS: Record<ActionKey, string> = {
  */
 export const ACTION_REQUIREMENTS: Record<
   ActionKey,
-  { needsEnv: boolean; needsDialect: boolean }
+  { needsEnv: boolean; needsAdapter: boolean }
 > = {
-  [ACTIONS.CREATE]: { needsEnv: true, needsDialect: false },
-  [ACTIONS.ARCHIVE]: { needsEnv: true, needsDialect: false },
-  [ACTIONS.SYNC]: { needsEnv: true, needsDialect: true },
-  [ACTIONS.UPDATE]: { needsEnv: true, needsDialect: false },
-  [ACTIONS.CLEAR_DB_PLANS]: { needsEnv: true, needsDialect: true },
-  [ACTIONS.URL]: { needsEnv: false, needsDialect: false },
-  [ACTIONS.LIST_PRODUCTS]: { needsEnv: true, needsDialect: false },
-  [ACTIONS.LIST_PRICES]: { needsEnv: true, needsDialect: false },
+  [ACTIONS.CREATE]: { needsEnv: true, needsAdapter: false },
+  [ACTIONS.ARCHIVE]: { needsEnv: true, needsAdapter: false },
+  [ACTIONS.SYNC]: { needsEnv: true, needsAdapter: true },
+  [ACTIONS.UPDATE]: { needsEnv: true, needsAdapter: false },
+  [ACTIONS.CLEAR_DB_PLANS]: { needsEnv: true, needsAdapter: true },
+  [ACTIONS.URL]: { needsEnv: false, needsAdapter: false },
+  [ACTIONS.LIST_PRODUCTS]: { needsEnv: true, needsAdapter: false },
+  [ACTIONS.LIST_PRICES]: { needsEnv: true, needsAdapter: false },
 } as const;
 
 // ========================================================================
@@ -123,6 +100,7 @@ export const ACTION_REQUIREMENTS: Record<
  * CLI options interface for commander action callback
  */
 export type CliOptions = Prettify<{
+  config?: string;
   env?: EnvironmentKey;
-  dialect?: DialectKey;
+  adapter?: string;
 }>;

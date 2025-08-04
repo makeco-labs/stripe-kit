@@ -1,10 +1,11 @@
 import type Stripe from 'stripe';
+
 import type {
   StripeMappers,
   StripePriceContext,
   SubscriptionPlan,
   SubscriptionPrice,
-} from '../config';
+} from '@/config';
 
 export function createDefaultMappers(): StripeMappers {
   return {
