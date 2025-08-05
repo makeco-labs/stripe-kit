@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import type { Context } from '@/types';
-import { listStripeProducts } from '@/utils/stripe-repository';
+import { listStripeProducts } from '@/utils';
 
 /**
  * Lists Stripe products

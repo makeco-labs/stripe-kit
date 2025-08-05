@@ -1,3 +1,2 @@
-// Main exports for the package
-export { defineConfig } from './config/define';
-export * from "./schemas"
+export * from "./schemas";
+export { defineConfig } from "./utils/define-config";

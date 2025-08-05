@@ -1,8 +1,6 @@
 import { Command } from "commander"
 
-import { loadConfig } from "@/config"
-import { createContext } from "@/utils/create-context"
-import { loadEnvironment } from "@/utils/load-env"
+import { loadConfig, createContext, loadEnvironment } from "@/utils"
 import { determineEnvironment } from "@/cli-prompts/environment"
 import { determineAdapter } from "@/cli-prompts/adapter"
 import { requireProductionConfirmation } from "@/cli-prompts/confirmation"

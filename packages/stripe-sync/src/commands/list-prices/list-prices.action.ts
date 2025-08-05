@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { listStripePrices } from '@/utils/stripe-repository';
+import { listStripePrices } from '@/utils';
 
 import type { Context } from '@/types';
 

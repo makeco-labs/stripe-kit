@@ -1,18 +1,25 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
-  "extends": [
-    "ultracite"
-  ],
+  "extends": ["ultracite"],
   "linter": {
     "rules": {
       "suspicious": {
-        "noConsole": "off"
-      },
-      "nursery": {
-        "noAwaitInLoop": "off"
+        "noConsole": "off",
+        "noExplicitAny": "warn",
+        "useAwait": "warn"
       },
       "performance": {
-        "noNamespaceImport": "off"
+        "noNamespaceImport": "warn"
+      },
+      "nursery": {
+        "noAwaitInLoop": "warn",
+        "noUselessUndefined": "off"
+      },
+      "style": {
+        "noNestedTernary": "warn"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "warn"
       }
     }
   }
