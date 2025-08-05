@@ -1,6 +1,6 @@
 # stripe-kit
 
-A CLI tool for managing Stripe subscription plans with database synchronization support.
+An unofficial CLI tool for managing Stripe subscription plans with database synchronization support.
 
 ## Installation
 

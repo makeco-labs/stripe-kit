@@ -1,6 +1,11 @@
 # stripe-kit
 
-A configurable CLI tool and TypeScript library for managing Stripe subscription plans and billing operations.
+[![npm version](https://badge.fury.io/js/stripe-kit.svg)](https://badge.fury.io/js/stripe-kit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/makeco/stripe-kit)](https://github.com/makeco/stripe-kit/issues)
+[![GitHub stars](https://img.shields.io/github/stars/makeco/stripe-kit)](https://github.com/makeco/stripe-kit/stargazers)
+
+An unofficial CLI tool for creating, archiving, updating Stripe products and prices and syncing them to your database.
 
 ## Installation
 
@@ -33,13 +38,13 @@ stripe-kit clear-db-plans --env dev --adapter postgres
 
 ```bash
 # Show Stripe dashboard URLs
-stripe-kit urls                    # Interactive selection (shows both live & test URLs)  
+stripe-kit urls                    # Interactive selection (shows both live & test URLs)
 stripe-kit urls -a                 # Show all URLs with labels
 
 # List Stripe products
 stripe-kit list-products --env dev --all
 
-# List Stripe prices  
+# List Stripe prices
 stripe-kit list-prices --env dev --all
 
 # View current user preferences
@@ -158,7 +163,7 @@ Create environment files for different stages:
 STRIPE_SECRET_KEY=sk_test_...
 DATABASE_URL=postgresql://...
 
-# .env.production  
+# .env.production
 STRIPE_SECRET_KEY=sk_live_...
 DATABASE_URL=postgresql://...
 ```

@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/makeco/stripe-kit/issues"
   },
-  "description": "A configurable CLI tool for managing Stripe subscription plans and billing operations",
+  "description": "An unofficial CLI tool for creating, archiving, updating Stripe products and prices and syncing them to your database.",
   "files": [
     "dist",
     "README.md",
