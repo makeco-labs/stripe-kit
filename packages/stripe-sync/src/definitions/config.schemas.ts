@@ -5,7 +5,7 @@ import { stripePriceSchema } from './stripe-price.schemas';
 import { stripeProductSchema } from './stripe-product.schemas';
 
 import type { DatabaseAdapter } from './database-adapter.schemas';
-import type { Prettify } from '@/types';
+import type { Prettify } from './utility.types';
 
 // ========================================================================
 // SUBSCRIPTION PLAN SCHEMA (COMBINES PRODUCT + PRICES)

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { listStripePrices } from '@/utils';
 
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 
 /**
  * Lists Stripe prices

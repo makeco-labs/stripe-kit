@@ -6,7 +6,7 @@ import type {
   StripePriceContext,
   SubscriptionPlan,
   StripePrice,
-} from '@/schemas';
+} from '@/definitions';
 
 export function createMappers(config: Config): StripeMappers {
   const metadataConfig = config.metadata;

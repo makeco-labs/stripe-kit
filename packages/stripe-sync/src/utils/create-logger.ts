@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import type { Logger } from '@/types';
+import type { Logger } from '@/definitions';
 
 export function createLogger(): Logger {
   return {

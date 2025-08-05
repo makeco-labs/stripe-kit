@@ -1,4 +1,4 @@
-export * from "../schemas";
+export * from "@/definitions";
 export * from "./create-context";
 export * from "./create-logger";
 export * from "./create-mappers";

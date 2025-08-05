@@ -1,6 +1,6 @@
-import type { Context } from "@/types";
+import type { Context } from "@/definitions";
 import { createMappers } from "./create-mappers";
-import type { Config, DatabaseAdapter } from "../schemas";
+import type { Config, DatabaseAdapter } from "@/definitions";
 import { createLogger } from "./create-logger";
 import { createStripeClient } from "./stripe-client";
 

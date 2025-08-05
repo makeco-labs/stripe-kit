@@ -1,9 +1,9 @@
 import { Command } from "commander"
 
 import { loadConfig, createContext, loadEnvironment } from "@/utils"
-import { determineEnvironment } from "@/cli-prompts/environment"
+import { determineEnvironment } from "@/cli-prompts"
 
-import type { Context } from "@/types"
+import type { Context, DatabaseAdapter } from "@/definitions"
 import type { EnvironmentKey } from "@/definitions"
 
 export interface ListPricesOptions {
@@ -35,7 +35,7 @@ export async function runListPricesPreflight(
   const config = await loadConfig({ configPath })
 
   // Create context without specific adapter (doesn't need database)
-  const ctx = createContext({ adapter: Object.values(config.adapters)[0], config })
+  const ctx = createContext({ adapter: Object.values(config.adapters)[0] as DatabaseAdapter, config })
 
   return {
     ctx,

@@ -1,5 +1,5 @@
-import type { SubscriptionPlan } from "@/schemas";
-import type { Context } from "@/types";
+import type { SubscriptionPlan } from "@/definitions";
+import type { Context } from "@/definitions";
 import { findStripeProduct, findStripePrice } from "@/utils";
 
 // ------------------ ENSURE STRIPE SUBSCRIPTION PLANS ------------------

@@ -1,13 +1,11 @@
 import { Command } from "commander"
 
 import { loadConfig, createContext, loadEnvironment } from "@/utils"
-import { determineEnvironment } from "@/cli-prompts/environment"
-import { determineAdapter } from "@/cli-prompts/adapter"
-import { requireProductionConfirmation } from "@/cli-prompts/confirmation"
+import { determineEnvironment, determineAdapter, requireProductionConfirmation } from "@/cli-prompts"
 
-import type { Context } from "@/types"
+import type { Context } from "@/definitions"
 import type { EnvironmentKey } from "@/definitions"
-import type { SubscriptionPlan } from "@/schemas"
+import type { SubscriptionPlan } from "@/definitions"
 
 export interface CreateOptions {
   env?: EnvironmentKey

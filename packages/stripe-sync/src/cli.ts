@@ -2,15 +2,17 @@
 
 import { Command } from "commander"
 
-// Import commands
-import { create } from "./commands/create/create.command"
-import { archive } from "./commands/archive/archive.command"
-import { sync } from "./commands/sync/sync.command"
-import { update } from "./commands/update/update.command"
-import { clearDbPlans } from "./commands/clear-db-plans/clear-db-plans.command"
-import { url } from "./commands/url/url.command"
-import { listProducts } from "./commands/list-products/list-products.command"
-import { listPrices } from "./commands/list-prices/list-prices.command"
+// Import all commands from barrel export
+import {
+  create,
+  archive,
+  sync,
+  update,
+  clearDbPlans,
+  url,
+  listProducts,
+  listPrices
+} from "./commands"
 
 // Handle process signals (simple and reliable)
 process.on("SIGINT", () => process.exit(0))

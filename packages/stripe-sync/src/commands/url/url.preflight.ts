@@ -4,7 +4,7 @@ import { loadConfig, createContext, loadEnvironment } from '@/utils';
 import { determineEnvironment } from '@/cli-prompts/environment';
 import { determineAdapter } from '@/cli-prompts/adapter';
 
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 import type { EnvironmentKey } from '@/definitions';
 
 export interface UrlOptions {

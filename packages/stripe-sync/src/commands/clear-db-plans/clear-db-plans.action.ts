@@ -1,4 +1,4 @@
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 
 /**
  * Clears all subscription plans from the database

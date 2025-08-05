@@ -1,4 +1,4 @@
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 import { findStripeProduct, listStripePrices } from '@/utils';
 
 // ------------------ ARCHIVE STRIPE PRODUCTS ------------------

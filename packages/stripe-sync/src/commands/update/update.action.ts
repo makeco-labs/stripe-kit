@@ -1,4 +1,4 @@
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 import { listStripeProducts, listStripePrices } from '@/utils';
 
 // ========================================================================

@@ -5,7 +5,7 @@ import { determineEnvironment } from '@/cli-prompts/environment';
 import { determineAdapter } from '@/cli-prompts/adapter';
 import { requireProductionConfirmation } from '@/cli-prompts/confirmation';
 
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 import type { EnvironmentKey } from '@/definitions';
 
 export interface SyncOptions {

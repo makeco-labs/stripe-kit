@@ -1,17 +1,7 @@
 import type Stripe from 'stripe';
 
-import type { Config, DatabaseAdapter, StripeMappers } from './schemas';
-
-// ========================================================================
-// UTILITY TYPES
-// ========================================================================
-
-/**
- * Utility type for flattening intersections
- */
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
+import type { Config, StripeMappers } from './config.schemas';
+import type { DatabaseAdapter } from './database-adapter.schemas';
 
 // ========================================================================
 // CONTEXT TYPES

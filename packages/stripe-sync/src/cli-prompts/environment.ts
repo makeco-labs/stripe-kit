@@ -1,9 +1,9 @@
 import chalk from "chalk";
 import prompts from "prompts";
 
-import { VALID_ENVIRONMENTS } from "../definitions";
+import { VALID_ENVIRONMENTS } from "@/definitions";
 
-import type { EnvironmentKey } from "../definitions";
+import type { EnvironmentKey } from "@/definitions";
 
 /**
  * Determines the environment to be used, either from input or via interactive prompt

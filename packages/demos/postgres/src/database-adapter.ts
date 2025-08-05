@@ -1,14 +1,13 @@
+import type { DatabaseAdapter } from '@makeco/stripe-sync';
 import { eq } from 'drizzle-orm';
 import { db } from './db-connection';
-import { products, prices } from './schema';
-import type { DatabaseAdapter } from '@makeco/stripe-sync';
+import { prices, products } from './db-schema';
 
 /**
  * PostgreSQL database adapter using Drizzle ORM
  * This demonstrates how to sync Stripe data to your database
  */
 export const postgresAdapter: DatabaseAdapter = {
-
   async syncProducts(stripeProducts) {
     for (const stripeProduct of stripeProducts) {
       const internalId = stripeProduct.metadata?.internal_product_id;

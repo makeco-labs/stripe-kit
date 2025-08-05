@@ -1,6 +1,6 @@
 import type Stripe from 'stripe';
 
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 
 // ========================================================================
 // FIND OPERATIONS (PRECISE SEARCH)

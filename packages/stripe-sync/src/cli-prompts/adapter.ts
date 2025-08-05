@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
 
-import type { DatabaseAdapter } from '../schemas';
+import type { DatabaseAdapter } from '@/definitions';
 
 /**
  * Determines the database adapter, either from input or via interactive prompt.

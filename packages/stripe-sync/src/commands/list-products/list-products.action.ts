@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { Context } from '@/types';
+import type { Context } from '@/definitions';
 import { listStripeProducts } from '@/utils';
 
 /**

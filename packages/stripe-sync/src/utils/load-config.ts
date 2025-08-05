@@ -4,8 +4,8 @@ import path from 'node:path';
 import { z } from 'zod';
 import chalk from 'chalk';
 
-import type { Config } from '../schemas';
-import { configSchema } from '../schemas';
+import type { Config } from '@/definitions';
+import { configSchema } from '@/definitions';
 
 // ========================================================================
 // TYPESCRIPT COMPILATION UTILITIES
