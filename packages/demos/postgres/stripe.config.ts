@@ -1,7 +1,6 @@
 import { defineConfig } from '@makeco/stripe-kit';
 import { postgresAdapter } from './src/database-adapter';
 
-
 export const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 if (!stripeSecretKey) {
@@ -238,6 +237,6 @@ export default defineConfig({
     productIdField: 'internal_product_id',
     priceIdField: 'internal_price_id',
     managedByField: 'managed_by',
-    managedByValue: 'stripe-sync-postgres-demo',
+    managedByValue: 'stripe-kit-postgres-demo',
   },
 });

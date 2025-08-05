@@ -1,10 +1,10 @@
 {
   "name": "@demo/postgres",
   "version": "1.0.0",
-  "description": "Example project using stripe-sync",
+  "description": "Example project using stripe-kit",
   "type": "module",
   "scripts": {
-    "stripe": "stripe-sync -c stripe.config.ts",
+    "stripe": "stripe-kit -c stripe.config.ts",
     "db:drop": "dotenv -e ./.env.dev drizzle-kit drop",
     "db": "db -c db.config.ts"
   },

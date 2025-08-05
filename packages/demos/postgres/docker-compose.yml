@@ -1,4 +1,4 @@
-name: stripe-sync-dev
+name: stripe-kit-dev
 
 # Test databases for db-cli development and examples
 # Usage: docker compose up -d
@@ -6,7 +6,7 @@ name: stripe-sync-dev
 services:
   postgres:
     image: postgres:alpine
-    container_name: stripe-sync-dev
+    container_name: stripe-kit-dev
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -14,7 +14,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - stripe-sync-dev-postgres_data:/var/lib/postgresql/data
+      - stripe-kit-dev-postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres_test"]
       interval: 10s
@@ -22,4 +22,4 @@ services:
       retries: 5
 
 volumes:
-  stripe-sync-dev-postgres_data:
+  stripe-kit-dev-postgres_data:

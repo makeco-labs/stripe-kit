@@ -1,10 +1,8 @@
 import { z } from 'zod';
-
+import type { DatabaseAdapter } from './database-adapter.schemas';
 import { databaseAdapterSchema } from './database-adapter.schemas';
 import { stripePriceSchema } from './stripe-price.schemas';
 import { stripeProductSchema } from './stripe-product.schemas';
-
-import type { DatabaseAdapter } from './database-adapter.schemas';
 import type { Prettify } from './utility.types';
 
 // ========================================================================
@@ -14,7 +12,7 @@ import type { Prettify } from './utility.types';
 export const subscriptionPlanSchema = z.object({
   // Product configuration
   product: stripeProductSchema,
-  
+
   // Associated prices
   prices: z.array(stripePriceSchema).min(1),
 });
@@ -58,13 +56,13 @@ export const configSchema = z.object({
       productIdField: z.string().default('internal_product_id'),
       priceIdField: z.string().default('internal_price_id'),
       managedByField: z.string().default('managed_by'),
-      managedByValue: z.string().default('stripe-sync'),
+      managedByValue: z.string().default('@makeco/stripe-kit'),
     })
     .default({
       productIdField: 'internal_product_id',
       priceIdField: 'internal_price_id',
       managedByField: 'managed_by',
-      managedByValue: 'stripe-sync',
+      managedByValue: '@makeco/stripe-kit',
     }),
 });
 

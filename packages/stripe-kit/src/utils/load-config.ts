@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { z } from 'zod';
 import chalk from 'chalk';
+import { z } from 'zod';
 
 import type { Config } from '@/definitions';
 import { configSchema } from '@/definitions';
@@ -55,7 +55,6 @@ export function discoverStripeConfig(): string | null {
   return null;
 }
 
-
 /**
  * Loads and parses a stripe config file
  */
@@ -79,7 +78,7 @@ export async function loadConfig(input: {
       console.error('Or specify a config file with --config flag');
       console.error('');
       console.error('Example stripe.config.ts:');
-      console.error(`import { defineConfig } from 'stripe-sync';`);
+      console.error(`import { defineConfig } from 'stripe-kit';`);
       console.error('export default defineConfig({');
       console.error('  plans: [...],');
       console.error('  adapters: {...},');
