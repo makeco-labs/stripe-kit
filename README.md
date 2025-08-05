@@ -5,7 +5,7 @@ An unofficial CLI tool for managing Stripe subscription plans with database sync
 ## Installation
 
 ```sh
-npm install stripe-kit
+npm install @makeco/stripe-kit
 ```
 
 ## What's inside?
@@ -14,7 +14,7 @@ This monorepo includes the following packages:
 
 ### Packages
 
-- `stripe-kit`: Core CLI package for managing Stripe subscription plans
+- `@makeco/stripe-kit`: Core CLI package for managing Stripe subscription plans
 - `demos`: Example configurations and usage patterns
 
 Each package is 100% [TypeScript](https://www.typescriptlang.org/).

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@makeco/db-cli": "^0.1.2",
-    "stripe-kit": "workspace:*",
+    "@makeco/stripe-kit": "workspace:*",
     "drizzle-orm": "^0.44.4",
     "postgres": "^3.4.0"
   },

@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-import { homedir } from 'os';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
 
 import type { EnvironmentKey } from '@/definitions';
 
@@ -9,7 +9,7 @@ export interface UserPreferences {
   defaultAdapter?: string;
 }
 
-const CONFIG_DIR = join(homedir(), '.config', 'stripe-kit');
+const CONFIG_DIR = join(homedir(), '.config', '@makeco', 'stripe-kit');
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
 
 // ========================================================================
@@ -23,10 +23,10 @@ export function loadUserPreferences(): UserPreferences {
     if (!existsSync(CONFIG_FILE)) {
       return {};
     }
-    
+
     const content = readFileSync(CONFIG_FILE, 'utf-8');
     return JSON.parse(content) as UserPreferences;
-  } catch (error) {
+  } catch {
     console.warn('Warning: Could not load user preferences, using defaults');
     return {};
   }
@@ -34,7 +34,10 @@ export function loadUserPreferences(): UserPreferences {
 
 // ------------------ Save User Preferences ------------------
 
-export function saveUserPreference(key: keyof UserPreferences, value: string): void {
+export function saveUserPreference(
+  key: keyof UserPreferences,
+  value: string
+): void {
   try {
     // Ensure config directory exists
     if (!existsSync(CONFIG_DIR)) {
@@ -43,13 +46,13 @@ export function saveUserPreference(key: keyof UserPreferences, value: string): v
 
     // Load existing preferences
     const preferences = loadUserPreferences();
-    
+
     // Update the specific preference
     preferences[key] = value as any;
-    
+
     // Save back to file
     writeFileSync(CONFIG_FILE, JSON.stringify(preferences, null, 2));
-  } catch (error) {
+  } catch {
     // Silently fail - preferences are nice-to-have, not critical
     console.warn(`Warning: Could not save user preference ${key}`);
   }

@@ -1,6 +1,6 @@
 # Stripe Sync PostgreSQL Demo
 
-This demo shows how to use `stripe-kit` with PostgreSQL and Drizzle ORM to sync subscription plans between your application and Stripe.
+This demo shows how to use `@makeco/stripe-kit` with PostgreSQL and Drizzle ORM to sync subscription plans between your application and Stripe.
 
 ## Setup
 

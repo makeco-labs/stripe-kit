@@ -1,4 +1,4 @@
-import { defineConfig } from 'stripe-kit';
+import { defineConfig } from '@makeco/stripe-kit';
 import { postgresAdapter } from './src/database-adapter';
 
 

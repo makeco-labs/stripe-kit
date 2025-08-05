@@ -27,7 +27,7 @@ export const config = new Command()
       
       console.log(chalk.gray('\n💡 Last used selections are pre-selected in prompts'));
       console.log(chalk.gray('   You still need to confirm your choice each time'));
-      console.log(chalk.gray(`   Configuration stored in: ~/.config/stripe-kit/config.json\n`));
+      console.log(chalk.gray(`   Configuration stored in: ~/.config/@makeco/stripe-kit/config.json\n`));
       
     } catch (error) {
       console.error(chalk.red(`❌ Error reading preferences: ${error}`));

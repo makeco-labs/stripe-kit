@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "stripe-kit",
+      "name": "@makeco/stripe-kit-monorepo",
       "devDependencies": {
         "@biomejs/biome": "2.1.2",
         "turbo": "^2.5.5",
@@ -18,9 +18,9 @@
       "version": "1.0.0",
       "dependencies": {
         "@makeco/db-cli": "^0.1.2",
+        "@makeco/stripe-kit": "workspace:*",
         "drizzle-orm": "^0.44.4",
         "postgres": "^3.4.0",
-        "stripe-kit": "workspace:*",
       },
       "devDependencies": {
         "@types/pg": "^8.10.0",
@@ -30,7 +30,7 @@
       },
     },
     "packages/stripe-kit": {
-      "name": "stripe-kit",
+      "name": "@makeco/stripe-kit",
       "version": "0.1.0",
       "bin": {
         "stripe-kit": "./dist/cli.js",
@@ -170,6 +170,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.4", "", {}, "sha512-VT2+G1VQs/9oz078bLrYbecdZKs912zQlkelYpuf+SXF+QvZDYJlbx/LSx+meSAwdDFnF8FVXW92AVjjkVmgFw=="],
 
     "@makeco/db-cli": ["@makeco/db-cli@0.1.2", "", { "dependencies": { "chalk": "^5.2.0", "commander": "^12.1.0", "dotenv": "^16.0.3", "drizzle-orm": "^0.44.4", "esbuild-register": "^3.5.0", "node-fetch": "^3.3.2", "prompts": "^2.4.2", "tsx": "^4.20.3", "ws": "^8.18.2" }, "peerDependencies": { "drizzle-kit": "*" }, "bin": { "db": "dist/cli/main.js" } }, "sha512-SLgAgYD/uB9YRpN4eC7EpLWGeoYCRPBWTYLcS3S/jl2tYjaFlj8uETaFZewY97ouXDXx5t+EMc/48w849x3IqA=="],
+
+    "@makeco/stripe-kit": ["@makeco/stripe-kit@workspace:packages/stripe-kit"],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
@@ -576,8 +578,6 @@
     "strip-literal": ["strip-literal@3.0.0", "", { "dependencies": { "js-tokens": "^9.0.1" } }, "sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA=="],
 
     "stripe": ["stripe@18.4.0", "", { "dependencies": { "qs": "^6.11.0" }, "peerDependencies": { "@types/node": ">=12.x.x" }, "optionalPeers": ["@types/node"] }, "sha512-LKFeDnDYo4U/YzNgx2Lc9PT9XgKN0JNF1iQwZxgkS4lOw5NunWCnzyH5RhTlD3clIZnf54h7nyMWkS8VXPmtTQ=="],
-
-    "stripe-kit": ["stripe-kit@workspace:packages/stripe-kit"],
 
     "supports-color": ["supports-color@7.2.0", "", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="],
 
