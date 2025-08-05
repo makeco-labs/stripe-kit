@@ -1,14 +1,23 @@
 import { Command } from "commander"
 import chalk from "chalk"
 
-import { showStripeDashboardUrl } from "../actions"
+/**
+ * Shows the Stripe dashboard URL
+ */
+function showStripeDashboardUrl(): void {
+  console.log(
+    chalk.blue(
+      'Stripe Dashboard URL: https://dashboard.stripe.com/test/products?active=true'
+    )
+  );
+}
 
 export const url = new Command()
   .name("url")
   .description("Show Stripe dashboard URL")
   .action(async () => {
     try {
-      await showStripeDashboardUrl()
+      showStripeDashboardUrl()
       console.log(
         chalk.green.bold(`\\n✅ URL action completed successfully!`)
       )

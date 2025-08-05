@@ -1,6 +1,6 @@
 import type { SubscriptionPlan } from "@/schemas";
 import type { Context } from "@/types";
-import { findStripeProduct, findStripePrice } from "./stripe-repository";
+import { findStripeProduct, findStripePrice } from "@/utils/stripe-repository";
 
 // ------------------ ENSURE STRIPE SUBSCRIPTION PLANS ------------------
 export async function ensureStripeSubscriptionPlans(

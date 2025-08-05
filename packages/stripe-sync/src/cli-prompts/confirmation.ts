@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import prompts from 'prompts';
 
 import { ENVIRONMENTS } from '../definitions';
-import { onCancel } from '../utils/signals';
 
 import type { EnvironmentKey } from '../definitions';
 
@@ -32,20 +31,16 @@ export async function requireProductionConfirmation(input: {
   );
 
   try {
-    const response = await prompts(
-      {
-        type: 'confirm',
-        name: 'value',
-        message: chalk.red(
-          `Are you absolutely sure you want to ${action} in PRODUCTION Stripe?`
-        ),
-        initial: false,
-      },
-      { onCancel }
-    );
+    const response = await prompts({
+      type: 'confirm',
+      name: 'value',
+      message: chalk.red(
+        `Are you absolutely sure you want to ${action} in PRODUCTION Stripe?`
+      ),
+      initial: false,
+    });
 
     if (!response.value) {
-      console.log(chalk.yellow('\\nOperation canceled for safety.'));
       process.exit(0);
     }
   } catch (error) {

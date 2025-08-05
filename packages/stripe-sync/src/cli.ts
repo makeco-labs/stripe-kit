@@ -3,18 +3,29 @@
 import { Command } from "commander"
 
 // Import commands
-import { create } from "./commands/create"
+import { create } from "./commands/create/create.command"
 import { archive } from "./commands/archive/archive.command"
 import { sync } from "./commands/sync"
 import { update } from "./commands/update"
 import { clearDbPlans } from "./commands/clear-db-plans"
 import { url } from "./commands/url"
-import { listProducts } from "./commands/list-products"
-import { listPrices } from "./commands/list-prices"
+import { listProducts } from "./commands/list-products/list-products.command"
+import { listPrices } from "./commands/list-prices/list-prices.command"
 
-// Handle process signals
+// Handle process signals (simple and reliable)
 process.on("SIGINT", () => process.exit(0))
 process.on("SIGTERM", () => process.exit(0))
+
+// Handle basic errors (no fancy cleanup)
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught exception:', error.message)
+  process.exit(1)
+})
+
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ Unhandled rejection:', reason)
+  process.exit(1)
+})
 
 const packageVersion = "0.1.0";
 

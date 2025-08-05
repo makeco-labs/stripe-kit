@@ -1,7 +1,7 @@
 import { Command } from "commander"
 import chalk from "chalk"
 
-import type { EnvironmentKey } from "../definitions"
+import type { EnvironmentKey } from "@/definitions"
 
 interface ClearDbPlansOptions {
   config?: string

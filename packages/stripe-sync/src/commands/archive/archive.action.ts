@@ -1,5 +1,5 @@
-import type { Context } from '../../types';
-import { findStripeProduct, listStripePrices } from '../../actions/stripe-repository';
+import type { Context } from '@/types';
+import { findStripeProduct, listStripePrices } from '@/utils/stripe-repository';
 
 // ------------------ ARCHIVE STRIPE PRODUCTS ------------------
 async function archiveStripeProducts(

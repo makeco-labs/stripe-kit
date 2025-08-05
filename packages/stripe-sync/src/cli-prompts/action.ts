@@ -5,7 +5,6 @@ import {
   ACTION_DESCRIPTIONS,
   VALID_ACTIONS,
 } from '../definitions';
-import { onCancel } from '../utils/signals';
 
 import type { ActionKey } from '../definitions';
 
@@ -32,22 +31,18 @@ export async function determineAction(input: {
   }
 
   try {
-    const response = await prompts(
-      {
-        type: 'select',
-        name: 'value',
-        message: chalk.blue('Select the action to perform:'),
-        choices: VALID_ACTIONS.map((action) => ({
-          title: ACTION_DESCRIPTIONS[action],
-          value: action,
-        })),
-        initial: 0,
-      },
-      { onCancel }
-    );
+    const response = await prompts({
+      type: 'select',
+      name: 'value',
+      message: chalk.blue('Select the action to perform:'),
+      choices: VALID_ACTIONS.map((action) => ({
+        title: ACTION_DESCRIPTIONS[action],
+        value: action,
+      })),
+      initial: 0,
+    });
 
     if (!response.value) {
-      console.log(chalk.red('\\nOperation canceled.'));
       process.exit(0);
     }
 

@@ -2,7 +2,6 @@ import chalk from "chalk";
 import prompts from "prompts";
 
 import { VALID_ENVIRONMENTS } from "../definitions";
-import { onCancel } from "../utils/signals";
 
 import type { EnvironmentKey } from "../definitions";
 
@@ -22,24 +21,20 @@ export async function determineEnvironment(input: {
 	}
 
 	try {
-		const response = await prompts(
-			{
-				type: "select",
-				name: "value",
-				message: chalk.blue("Select the target environment:"),
-				choices: [
-					{ title: "Test", value: "test" },
-					{ title: "Development", value: "dev" },
-					{ title: "Staging", value: "staging" },
-					{ title: "Production", value: "prod" },
-				],
-				initial: 0, // Default to 'test' for safety
-			},
-			{ onCancel },
-		);
+		const response = await prompts({
+			type: "select",
+			name: "value",
+			message: chalk.blue("Select the target environment:"),
+			choices: [
+				{ title: "Test", value: "test" },
+				{ title: "Development", value: "dev" },
+				{ title: "Staging", value: "staging" },
+				{ title: "Production", value: "prod" },
+			],
+			initial: 0, // Default to 'test' for safety
+		});
 
 		if (!response.value) {
-			console.log(chalk.red("\\nOperation canceled."));
 			process.exit(0);
 		}
 

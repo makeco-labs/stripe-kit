@@ -1,8 +1,6 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
 
-import { onCancel } from '../utils/signals';
-
 import type { DatabaseAdapter } from '../schemas';
 
 /**
@@ -51,22 +49,18 @@ export async function determineAdapter(input: {
 
   // Interactive prompt for multiple adapters
   try {
-    const response = await prompts(
-      {
-        type: 'select',
-        name: 'value',
-        message: chalk.blue('Select the database adapter:'),
-        choices: adapterNames.map((name) => ({
-          title: name.charAt(0).toUpperCase() + name.slice(1),
-          value: name,
-        })),
-        initial: 0,
-      },
-      { onCancel }
-    );
+    const response = await prompts({
+      type: 'select',
+      name: 'value',
+      message: chalk.blue('Select the database adapter:'),
+      choices: adapterNames.map((name) => ({
+        title: name.charAt(0).toUpperCase() + name.slice(1),
+        value: name,
+      })),
+      initial: 0,
+    });
 
     if (!response.value) {
-      console.log(chalk.red('\\nOperation canceled.'));
       process.exit(0);
     }
 

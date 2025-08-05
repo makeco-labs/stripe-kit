@@ -9,22 +9,23 @@ import { requireProductionConfirmation } from "@/cli-prompts/confirmation"
 
 import type { Context } from "@/types"
 import type { EnvironmentKey } from "@/definitions"
+import type { SubscriptionPlan } from "@/schemas"
 
-export interface ArchiveOptions {
+export interface CreateOptions {
   env?: EnvironmentKey
   adapter?: string
 }
 
-export interface ArchivePreflightResult {
+export interface CreatePreflightResult {
   ctx: Context
-  productIdsToArchive: string[]
+  plans: SubscriptionPlan[]
   chosenEnv: EnvironmentKey
 }
 
-export async function runArchivePreflight(
-  options: ArchiveOptions,
+export async function runCreatePreflight(
+  options: CreateOptions,
   command: Command
-): Promise<ArchivePreflightResult> {
+): Promise<CreatePreflightResult> {
   // Get global config option from parent command
   const globalOptions = command.parent?.opts() || {}
   const configPath = globalOptions.config
@@ -49,18 +50,13 @@ export async function runArchivePreflight(
 
   // Production confirmation
   await requireProductionConfirmation({
-    action: "archive plans",
+    action: "create plans",
     env: chosenEnv,
   })
 
-  // Get product IDs to archive
-  const productIdsToArchive = config.productIds
-    ? Object.values(config.productIds)
-    : config.plans.map((plan) => plan.product.id)
-
   return {
     ctx,
-    productIdsToArchive,
+    plans: config.plans,
     chosenEnv,
   }
 }
