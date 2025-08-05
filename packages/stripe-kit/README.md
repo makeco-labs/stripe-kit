@@ -19,19 +19,19 @@ npm install @makeco/stripe-kit
 
 ```bash
 # Create subscription plans in Stripe
-stripe-kit create --env dev --adapter postgres
+stripe-kit create -e dev -a postgres
 
 # Archive subscription plans in Stripe
-stripe-kit archive --env prod --adapter postgres
+stripe-kit archive -e prod -a postgres
 
 # Sync Stripe plans to database
-stripe-kit sync --env staging --adapter postgres
+stripe-kit sync -e staging -a postgres
 
 # Update existing Stripe plans
-stripe-kit update --env prod --adapter postgres
+stripe-kit update -e prod -a postgres
 
-# Clear database plans
-stripe-kit clear-db-plans --env dev --adapter postgres
+# Database operations
+stripe-kit db purge -e dev -a postgres
 ```
 
 ### Utility Commands
@@ -42,10 +42,10 @@ stripe-kit urls                    # Interactive selection (shows both live & te
 stripe-kit urls -a                 # Show all URLs with labels
 
 # List Stripe products
-stripe-kit list-products --env dev --all
+stripe-kit list products -e dev --all
 
 # List Stripe prices
-stripe-kit list-prices --env dev --all
+stripe-kit list prices -e dev --all
 
 # View current user preferences
 stripe-kit config
@@ -73,6 +73,31 @@ stripe-kit config
 ```
 
 Preferences are stored in `~/.config/@makeco/stripe-kit/config.json`
+
+## Subcommands
+
+### Database Operations
+
+```bash
+# Show available database operations
+stripe-kit db
+
+# Purge database plans
+stripe-kit db purge -e dev -a postgres
+```
+
+### List Operations
+
+```bash
+# Show available list operations
+stripe-kit list
+
+# List products
+stripe-kit list products -e dev --all
+
+# List prices
+stripe-kit list prices -e dev --all
+```
 
 ## API Usage
 

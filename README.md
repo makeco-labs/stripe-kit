@@ -42,17 +42,20 @@ The CLI provides commands for managing Stripe subscription plans:
 
 ```sh
 # Create subscription plans
-stripe-kit create --env test
+stripe-kit create -e test
 
 # Archive subscription plans  
-stripe-kit archive --env staging
+stripe-kit archive -e staging
 
 # Sync plans to database
-stripe-kit sync --env dev --adapter postgres
+stripe-kit sync -e dev -a postgres
+
+# Database operations
+stripe-kit db purge -e test -a postgres
 
 # List products and prices
-stripe-kit list-products --env test
-stripe-kit list-prices --env test
+stripe-kit list products -e test
+stripe-kit list prices -e test
 
 # Quick access to Stripe dashboard URLs
 stripe-kit urls
