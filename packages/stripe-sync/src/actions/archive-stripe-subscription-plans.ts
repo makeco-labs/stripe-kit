@@ -1,5 +1,5 @@
 import type { Context } from '@/types';
-import { fetchStripePrices, fetchStripeProducts } from './stripe-fetch-utils';
+import { findStripeProduct, listStripePrices } from './stripe-repository';
 
 // ------------------ ARCHIVE STRIPE PRODUCTS ------------------
 async function archiveStripeProducts(
@@ -15,29 +15,33 @@ async function archiveStripeProducts(
     return;
   }
 
-  const products = await fetchStripeProducts(ctx);
-  const productsToArchive = products.filter((product) =>
-    internalProductIds.includes(product.metadata?.internal_product_id ?? '')
-  );
+  let archivedCount = 0;
 
-  if (productsToArchive.length === 0) {
-    ctx.logger.info('No products to archive in Stripe');
-    return;
-  }
-
-  for (const product of productsToArchive) {
+  for (const internalProductId of internalProductIds) {
     try {
+      const product = await findStripeProduct(ctx, { internalProductId });
+      
+      if (!product) {
+        ctx.logger.info(`Product not found in Stripe: ${internalProductId}`);
+        continue;
+      }
+
       await ctx.stripeClient.products.update(product.id, {
         active: false,
       });
-      ctx.logger.info(`Archived product in Stripe: ${product.id}`);
+      ctx.logger.info(`Archived product in Stripe: ${product.id} (Internal ID: ${internalProductId})`);
+      archivedCount++;
     } catch (error) {
       ctx.logger.error({
         message: 'Error archiving product in Stripe',
         error,
-        productId: product.id,
+        internalProductId,
       });
     }
+  }
+
+  if (archivedCount === 0) {
+    ctx.logger.info('No products were archived in Stripe');
   }
 }
 
@@ -55,9 +59,9 @@ async function archiveStripePrices(
     return;
   }
 
-  const prices = await fetchStripePrices(ctx);
+  const prices = await listStripePrices(ctx, { showAll: false });
   const pricesToArchive = prices.filter((price) =>
-    internalProductIds.includes(price.metadata?.internal_product_id ?? '')
+    internalProductIds.includes(price.metadata?.[ctx.config.metadata.productIdField] ?? '')
   );
 
   if (pricesToArchive.length === 0) {

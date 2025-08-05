@@ -1,5 +1,5 @@
-import type { Config } from './schemas';
-import { configSchema } from './schemas';
+import type { Config } from '../schemas';
+import { configSchema } from '../schemas';
 
 /**
  * Defines a type-safe Stripe Sync configuration object

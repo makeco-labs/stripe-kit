@@ -9,7 +9,7 @@ import {
 } from './definitions';
 import { onCancel } from './signals';
 
-import type { DatabaseAdapter } from '../config/schemas';
+import type { DatabaseAdapter } from '../schemas';
 import type { ActionKey, EnvironmentKey } from './definitions';
 
 // ========================================================================

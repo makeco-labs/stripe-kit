@@ -1,21 +1,30 @@
 import chalk from 'chalk';
+import { listStripePrices } from './stripe-repository';
+
 import type { Context } from '@/types';
-import { fetchStripePrices } from './stripe-fetch-utils';
 
 /**
  * Lists Stripe prices
  */
-export async function listStripePrices(ctx: Context): Promise<void> {
+export async function listStripePricesAction(
+  ctx: Context,
+  options: { showAll?: boolean } = {}
+): Promise<void> {
+  const { showAll = false } = options;
+  
   try {
-    const prices = await fetchStripePrices(ctx);
+    const prices = await listStripePrices(ctx, { showAll });
 
     if (prices.length === 0) {
       ctx.logger.info('No prices found in Stripe.');
       return;
     }
 
-    ctx.logger.info(`Found ${prices.length} prices in Stripe:`);
+    ctx.logger.info(`Found ${prices.length} ${showAll ? '' : 'managed '}prices in Stripe:`);
     for (const price of prices) {
+      const isManaged = price.metadata?.[ctx.config.metadata.priceIdField] &&
+        price.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue;
+      
       console.log(chalk.green(`ID: ${chalk.bold(price.id)}`));
       console.log(`  Product: ${price.product}`);
       console.log(`  Active: ${price.active}`);
@@ -34,8 +43,13 @@ export async function listStripePrices(ctx: Context): Promise<void> {
       }
 
       console.log(
-        `  Internal ID: ${price.metadata?.internal_price_id || 'N/A'}`
+        `  Internal ID: ${price.metadata?.[ctx.config.metadata.priceIdField] || 'N/A'}`
       );
+      
+      if (showAll) {
+        console.log(`  Managed: ${isManaged ? chalk.green('Yes') : chalk.yellow('No')}`);
+      }
+      
       console.log('');
     }
   } catch (error) {

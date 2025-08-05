@@ -103,4 +103,5 @@ export type CliOptions = Prettify<{
   config?: string;
   env?: EnvironmentKey;
   adapter?: string;
+  all?: boolean;
 }>;

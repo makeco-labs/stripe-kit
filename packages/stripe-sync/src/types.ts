@@ -1,6 +1,6 @@
 import type Stripe from 'stripe';
 
-import type { DatabaseAdapter, StripeMappers } from './config/schemas';
+import type { Config, DatabaseAdapter, StripeMappers } from './schemas';
 
 // ========================================================================
 // UTILITY TYPES
@@ -30,4 +30,5 @@ export interface Context {
   mappers: StripeMappers;
   adapter: DatabaseAdapter;
   stripeClient: Stripe;
+  config: Config;
 }

@@ -1,3 +1,3 @@
 export * from './define';
 export * from './loader';
-export * from './schemas';
+export * from '../schemas';

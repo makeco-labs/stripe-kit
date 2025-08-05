@@ -1,28 +1,41 @@
 import chalk from 'chalk';
 import type { Context } from '@/types';
-import { fetchStripeProducts } from './stripe-fetch-utils';
+import { listStripeProducts } from './stripe-repository';
 
 /**
  * Lists Stripe products
  */
-export async function listStripeProducts(ctx: Context): Promise<void> {
+export async function listStripeProductsAction(
+  ctx: Context,
+  options: { showAll?: boolean } = {}
+): Promise<void> {
+  const { showAll = false } = options;
+  
   try {
-    const products = await fetchStripeProducts(ctx);
+    const products = await listStripeProducts(ctx, { showAll });
 
     if (products.length === 0) {
       ctx.logger.info('No products found in Stripe.');
       return;
     }
 
-    ctx.logger.info(`Found ${products.length} products in Stripe:`);
+    ctx.logger.info(`Found ${products.length} ${showAll ? '' : 'managed '}products in Stripe:`);
     for (const product of products) {
+      const isManaged = product.metadata?.[ctx.config.metadata.productIdField] &&
+        product.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue;
+      
       console.log(chalk.green(`ID: ${chalk.bold(product.id)}`));
       console.log(`  Name: ${product.name}`);
       console.log(`  Active: ${product.active}`);
       console.log(`  Description: ${product.description || 'N/A'}`);
       console.log(
-        `  Internal ID: ${product.metadata?.internal_product_id || 'N/A'}`
+        `  Internal ID: ${product.metadata?.[ctx.config.metadata.productIdField] || 'N/A'}`
       );
+      
+      if (showAll) {
+        console.log(`  Managed: ${isManaged ? chalk.green('Yes') : chalk.yellow('No')}`);
+      }
+      
       console.log('');
     }
   } catch (error) {

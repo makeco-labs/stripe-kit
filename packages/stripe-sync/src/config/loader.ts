@@ -1,10 +1,34 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { z } from 'zod';
+import chalk from 'chalk';
 
-import type { Config } from './schemas';
-import { configSchema } from './schemas';
+import type { Config } from '../schemas';
+import { configSchema } from '../schemas';
+
+// ========================================================================
+// TYPESCRIPT COMPILATION UTILITIES
+// ========================================================================
+
+const safeRegister = async () => {
+  const { register } = await import('esbuild-register/dist/node');
+  let res: { unregister: () => void };
+  try {
+    res = register({
+      format: 'cjs',
+      loader: 'ts',
+    });
+  } catch {
+    // tsx fallback
+    res = {
+      unregister: () => {
+        // No-op for tsx fallback
+      },
+    };
+  }
+  return res;
+};
 
 // ========================================================================
 // CONFIG DISCOVERY FUNCTIONS
@@ -18,6 +42,7 @@ export function discoverStripeConfig(): string | null {
     'stripe.config.ts',
     'stripe.config.js',
     'stripe.config.mjs',
+    'stripe.config.cjs',
   ];
   const cwd = process.cwd();
 
@@ -29,6 +54,7 @@ export function discoverStripeConfig(): string | null {
   }
   return null;
 }
+
 
 /**
  * Loads and parses a stripe config file
@@ -48,7 +74,7 @@ export async function loadConfig(input: {
     if (!discoveredConfig) {
       console.error('❌ Error: No stripe.config.ts file found.');
       console.error(
-        'Expected files: stripe.config.ts, stripe.config.js, or stripe.config.mjs'
+        'Expected files: stripe.config.ts, stripe.config.js, stripe.config.mjs, or stripe.config.cjs'
       );
       console.error('Or specify a config file with --config flag');
       console.error('');
@@ -70,11 +96,13 @@ export async function loadConfig(input: {
   }
 
   try {
-    // Convert to file URL for dynamic import
-    const configUrl = pathToFileURL(resolvedConfigPath).href;
-    const configModule = await import(configUrl);
+    const absolutePath = path.resolve(resolvedConfigPath);
 
-    const config = configModule.default || configModule;
+    const { unregister } = await safeRegister();
+    const require = createRequire(import.meta.url);
+    const required = require(absolutePath);
+    const config = required.default ?? required;
+    unregister();
 
     // Validate the configuration
     const validatedConfig = configSchema.parse(config);
