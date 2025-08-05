@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import dotenv from 'dotenv';
 
 import { findEnvDirectories, getEnvFilePatterns } from '../utils/workspace';
-import type { EnvironmentKey } from './definitions';
+import type { EnvironmentKey } from '../definitions';
 
 /**
  * Loads environment variables using environment-specific auto-detection
