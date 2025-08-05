@@ -1,5 +1,5 @@
 {
-	"name": "@makeco/stripe-sync",
+	"name": "stripe-kit-monorepo",
 	"module": "index.ts",
 	"type": "module",
 	"private": false,

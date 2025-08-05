@@ -1,4 +1,4 @@
-import type { DatabaseAdapter } from '@makeco/stripe-sync';
+import type { DatabaseAdapter } from 'stripe-kit';
 import { eq } from 'drizzle-orm';
 import { db } from './db-connection';
 import { prices, products } from './db-schema';

@@ -1,6 +1,6 @@
 # Stripe Sync PostgreSQL Demo
 
-This demo shows how to use `@makeco/stripe-sync` with PostgreSQL and Drizzle ORM to sync subscription plans between your application and Stripe.
+This demo shows how to use `stripe-kit` with PostgreSQL and Drizzle ORM to sync subscription plans between your application and Stripe.
 
 ## Setup
 
@@ -20,10 +20,10 @@ This demo shows how to use `@makeco/stripe-sync` with PostgreSQL and Drizzle ORM
    ```bash
    # Generate migration files
    bun run db:generate
-   
+
    # Run migrations
    bun run db:migrate
-   
+
    # (Optional) Open Drizzle Studio
    bun run db:studio
    ```
@@ -43,7 +43,7 @@ bun run stripe:list-products
 # List all products in Stripe account
 bun stripe:list-products --all
 
-# List managed prices only  
+# List managed prices only
 bun run stripe:list-prices
 
 # List all prices in Stripe account

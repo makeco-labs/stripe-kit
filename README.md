@@ -1,11 +1,11 @@
-# @makeco/stripe-sync
+# stripe-kit
 
 A CLI tool for managing Stripe subscription plans with database synchronization support.
 
 ## Installation
 
 ```sh
-npm install @makeco/stripe-sync
+npm install stripe-kit
 ```
 
 ## What's inside?
@@ -14,7 +14,7 @@ This monorepo includes the following packages:
 
 ### Packages
 
-- `@makeco/stripe-sync`: Core CLI package for managing Stripe subscription plans
+- `stripe-kit`: Core CLI package for managing Stripe subscription plans
 - `demos`: Example configurations and usage patterns
 
 Each package is 100% [TypeScript](https://www.typescriptlang.org/).
@@ -32,7 +32,7 @@ This Turborepo has some additional tools already setup for you:
 To build all apps and packages, run the following command:
 
 ```sh
-cd @makeco/stripe-sync
+cd stripe-kit
 bun run build
 ```
 
@@ -42,17 +42,20 @@ The CLI provides commands for managing Stripe subscription plans:
 
 ```sh
 # Create subscription plans
-stripe-sync create --env test
+stripe-kit create --env test
 
 # Archive subscription plans  
-stripe-sync archive --env staging
+stripe-kit archive --env staging
 
 # Sync plans to database
-stripe-sync sync --env dev --dialect postgres
+stripe-kit sync --env dev --adapter postgres
 
 # List products and prices
-stripe-sync list-products --env test
-stripe-sync list-prices --env test
+stripe-kit list-products --env test
+stripe-kit list-prices --env test
+
+# Quick access to Stripe dashboard URLs
+stripe-kit urls
 ```
 
 ## Features

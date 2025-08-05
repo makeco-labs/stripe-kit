@@ -1,5 +1,5 @@
-import { defineConfig } from '@makeco/stripe-sync';
-import { postgresAdapter } from './src/database-adapter.ts';
+import { defineConfig } from 'stripe-kit';
+import { postgresAdapter } from './src/database-adapter';
 
 
 export const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
