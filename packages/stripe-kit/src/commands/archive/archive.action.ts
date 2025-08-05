@@ -20,7 +20,7 @@ async function archiveStripeProducts(
   for (const internalProductId of internalProductIds) {
     try {
       const product = await findStripeProduct(ctx, { internalProductId });
-      
+
       if (!product) {
         ctx.logger.info(`Product not found in Stripe: ${internalProductId}`);
         continue;
@@ -29,7 +29,9 @@ async function archiveStripeProducts(
       await ctx.stripeClient.products.update(product.id, {
         active: false,
       });
-      ctx.logger.info(`Archived product in Stripe: ${product.id} (Internal ID: ${internalProductId})`);
+      ctx.logger.info(
+        `Archived product in Stripe: ${product.id} (Internal ID: ${internalProductId})`
+      );
       archivedCount++;
     } catch (error) {
       ctx.logger.error({
@@ -61,7 +63,9 @@ async function archiveStripePrices(
 
   const prices = await listStripePrices(ctx, { showAll: false });
   const pricesToArchive = prices.filter((price) =>
-    internalProductIds.includes(price.metadata?.[ctx.config.metadata.productIdField] ?? '')
+    internalProductIds.includes(
+      price.metadata?.[ctx.config.metadata.productIdField] ?? ''
+    )
   );
 
   if (pricesToArchive.length === 0) {

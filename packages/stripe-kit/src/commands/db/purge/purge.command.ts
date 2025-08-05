@@ -1,26 +1,32 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 
-import { ensureStripeSubscriptionPlans } from './create.action';
-import { type CreateOptions, runCreatePreflight } from './create.preflight';
+import { purgeDbAction } from './purge.action';
+import {
+  type PurgeDbOptions,
+  runPurgeDbPreflight,
+} from './purge.preflight';
 
-export const create = new Command()
-  .name('create')
-  .description('Create Stripe subscription plans (Idempotent)')
+export const purge = new Command()
+  .name('purge')
+  .description('Delete subscription plans from database')
   .option(
     '-e, --env <environment>',
     'Target environment (test, dev, staging, prod)'
   )
   .option('-a, --adapter <name>', 'Database adapter name')
-  .action(async (options: CreateOptions, command) => {
+  .action(async (options: PurgeDbOptions, command) => {
     try {
       // Run preflight checks and setup
-      const { ctx, plans } = await runCreatePreflight(options, command);
+      const { ctx } = await runPurgeDbPreflight(options, command);
 
       // Execute the action
-      await ensureStripeSubscriptionPlans(ctx, { plans });
+      await purgeDbAction(ctx);
 
       console.log(chalk.green('\nOperation completed successfully.'));
+
+      // Ensure process exits
+      process.exit(0);
     } catch (error) {
       console.error(chalk.red(`\nOperation failed: ${error}`));
       process.exit(1);

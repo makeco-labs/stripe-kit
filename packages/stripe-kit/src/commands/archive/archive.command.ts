@@ -1,29 +1,33 @@
-import { Command } from "commander"
-import chalk from "chalk"
+import chalk from 'chalk';
+import { Command } from 'commander';
 
-import { archiveStripeSubscriptionPlans } from "./archive.action"
-import { runArchivePreflight, type ArchiveOptions } from "./archive.preflight"
+import { archiveStripeSubscriptionPlans } from './archive.action';
+import { type ArchiveOptions, runArchivePreflight } from './archive.preflight';
 
 export const archive = new Command()
-  .name("archive")
-  .description("Archive Stripe subscription plans")
-  .option("-e, --env <environment>", "Target environment (test, dev, staging, prod)")
-  .option("-a, --adapter <name>", "Database adapter name")
+  .name('archive')
+  .description('Archive Stripe subscription plans')
+  .option(
+    '-e, --env <environment>',
+    'Target environment (test, dev, staging, prod)'
+  )
+  .option('-a, --adapter <name>', 'Database adapter name')
   .action(async (options: ArchiveOptions, command) => {
     try {
       // Run preflight checks and setup
-      const { ctx, productIdsToArchive } = await runArchivePreflight(options, command)
+      const { ctx, productIdsToArchive } = await runArchivePreflight(
+        options,
+        command
+      );
 
       // Execute the action
       await archiveStripeSubscriptionPlans(ctx, {
         internalProductIds: productIdsToArchive,
-      })
+      });
 
-      console.log(
-        chalk.green.bold(`\\n✅ ARCHIVE action completed successfully!`)
-      )
+      console.log(chalk.green('\nOperation completed successfully.'));
     } catch (error) {
-      console.error(chalk.red(`\\n❌ Operation failed: ${error}`))
-      process.exit(1)
+      console.error(chalk.red(`\nOperation failed: ${error}`));
+      process.exit(1);
     }
-  })
+  });

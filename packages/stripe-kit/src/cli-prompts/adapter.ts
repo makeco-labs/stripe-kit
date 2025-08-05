@@ -1,9 +1,7 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
-
-import { getLastUsedAdapter, saveUserPreference } from '@/utils';
-
 import type { DatabaseAdapter } from '@/definitions';
+import { getLastUsedAdapter, saveUserPreference } from '@/utils';
 
 /**
  * Determines the database adapter, either from input or via interactive prompt.
@@ -53,9 +51,10 @@ export async function determineAdapter(input: {
 
   // Get last used adapter for initial selection
   const lastUsedAdapter = getLastUsedAdapter();
-  const initialIndex = lastUsedAdapter && adapterNames.includes(lastUsedAdapter) 
-    ? adapterNames.indexOf(lastUsedAdapter) 
-    : 0;
+  const initialIndex =
+    lastUsedAdapter && adapterNames.includes(lastUsedAdapter)
+      ? adapterNames.indexOf(lastUsedAdapter)
+      : 0;
 
   // Interactive prompt for multiple adapters
   try {
@@ -81,10 +80,10 @@ export async function determineAdapter(input: {
     console.log(
       chalk.green(`Adapter selected via prompt: ${chalk.bold(response.value)}`)
     );
-    
+
     // Save as new default preference
     saveUserPreference('defaultAdapter', response.value);
-    
+
     return { name: response.value, adapter: availableAdapters[response.value] };
   } catch (error) {
     console.error(chalk.red('Error during adapter prompt:'), error);

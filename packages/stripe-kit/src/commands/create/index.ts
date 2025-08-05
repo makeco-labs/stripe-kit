@@ -1,1 +1,1 @@
-export { create } from './create.command'
+export { create } from './create.command';

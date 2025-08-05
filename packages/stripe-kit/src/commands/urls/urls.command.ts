@@ -17,9 +17,8 @@ export const urls = new Command()
       await showStripeUrlsAction({
         showAll: !!options.all,
       });
-
     } catch (error) {
-      console.error(chalk.red(`\\n❌ Operation failed: ${error}`));
+      console.error(chalk.red(`\nOperation failed: ${error}`));
       process.exit(1);
     }
   });

@@ -1,1 +1,1 @@
-export { archive } from './archive.command'
+export { archive } from './archive.command';

@@ -1,1 +1,1 @@
-export { sync } from './sync.command'
+export { sync } from './sync.command';

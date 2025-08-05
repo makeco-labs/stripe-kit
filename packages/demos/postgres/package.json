@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "stripe": "stripe-kit -c stripe.config.ts",
-    "db:drop": "dotenv -e ./.env.dev drizzle-kit drop",
     "db": "db -c db.config.ts"
   },
   "dependencies": {

@@ -12,7 +12,7 @@
         "noNamespaceImport": "warn"
       },
       "nursery": {
-        "noAwaitInLoop": "warn",
+        "noAwaitInLoop": "off",
         "noUselessUndefined": "off"
       },
       "style": {

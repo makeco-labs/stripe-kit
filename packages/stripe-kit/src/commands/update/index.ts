@@ -1,1 +1,1 @@
-export { update } from './update.command'
+export { update } from './update.command';

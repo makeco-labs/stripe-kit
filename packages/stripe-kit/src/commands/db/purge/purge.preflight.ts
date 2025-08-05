@@ -7,20 +7,20 @@ import {
 import type { Context, EnvironmentKey } from '@/definitions';
 import { createContext, loadConfig, loadEnvironment } from '@/utils';
 
-export interface UpdateOptions {
+export interface PurgeDbOptions {
   env?: EnvironmentKey;
   adapter?: string;
 }
 
-export interface UpdatePreflightResult {
+export interface PurgeDbPreflightResult {
   ctx: Context;
   chosenEnv: EnvironmentKey;
 }
 
-export async function runUpdatePreflight(
-  options: UpdateOptions,
+export async function runPurgeDbPreflight(
+  options: PurgeDbOptions,
   command: Command
-): Promise<UpdatePreflightResult> {
+): Promise<PurgeDbPreflightResult> {
   // Get global config option from parent command
   const globalOptions = command.parent?.opts() || {};
   const configPath = globalOptions.config;
@@ -43,38 +43,16 @@ export async function runUpdatePreflight(
   // Create context
   const ctx = createContext({ adapter: adapterResult.adapter, config });
 
-  // Verify Stripe client is available
-  if (!ctx.stripeClient) {
+  // Verify adapter has required methods
+  if (!(typeof ctx.adapter.clearProducts === 'function' && typeof ctx.adapter.clearPrices === 'function')) {
     throw new Error(
-      'Stripe client not available. Check STRIPE_SECRET_KEY environment variable.'
+      'Database adapter must implement clearProducts and clearPrices methods'
     );
-  }
-
-  // Verify Stripe secret key is configured
-  if (!ctx.config.env.stripeSecretKey) {
-    throw new Error('STRIPE_SECRET_KEY is not configured in environment');
-  }
-
-  // Verify plans are configured
-  if (!ctx.config.plans || ctx.config.plans.length === 0) {
-    throw new Error(
-      'No subscription plans configured. Check your config file.'
-    );
-  }
-
-  // Verify mappers are available
-  if (
-    !(
-      typeof ctx.mappers.mapSubscriptionPlanToStripeProduct === 'function' &&
-      typeof ctx.mappers.mapSubscriptionPlanToStripePrice === 'function'
-    )
-  ) {
-    throw new Error('Stripe mappers not available. Check your configuration.');
   }
 
   // Production confirmation
   await requireProductionConfirmation({
-    action: 'update Stripe plans',
+    action: 'purge database plans',
     env: chosenEnv,
   });
 

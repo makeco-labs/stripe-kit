@@ -1,7 +1,8 @@
-import type { DatabaseAdapter } from 'stripe-kit';
 import { eq } from 'drizzle-orm';
 import { db } from './db-connection';
 import { prices, products } from './db-schema';
+
+import type { DatabaseAdapter } from '@makeco/stripe-kit';
 
 /**
  * PostgreSQL database adapter using Drizzle ORM

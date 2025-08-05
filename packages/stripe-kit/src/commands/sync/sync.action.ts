@@ -1,17 +1,21 @@
 import type { Context } from '@/definitions';
-import { listStripeProducts, listStripePrices } from '@/utils';
+import { listStripePrices, listStripeProducts } from '@/utils';
 
 /**
  * Syncs managed subscription plans from Stripe to the database
  */
-export async function syncStripeSubscriptionPlansAction(ctx: Context): Promise<void> {
+export async function syncStripeSubscriptionPlansAction(
+  ctx: Context
+): Promise<void> {
   ctx.logger.info('Syncing Stripe subscription plans to database...');
 
   try {
     // Fetch managed products from Stripe (only those managed by this tool)
     ctx.logger.info('Fetching managed products from Stripe...');
     const stripeProducts = await listStripeProducts(ctx, { showAll: false });
-    ctx.logger.info(`Found ${stripeProducts.length} managed products in Stripe`);
+    ctx.logger.info(
+      `Found ${stripeProducts.length} managed products in Stripe`
+    );
 
     // Fetch managed prices from Stripe (only those managed by this tool)
     ctx.logger.info('Fetching managed prices from Stripe...');
@@ -28,9 +32,14 @@ export async function syncStripeSubscriptionPlansAction(ctx: Context): Promise<v
     await ctx.adapter.syncPrices(stripePrices);
     ctx.logger.info('Prices synced successfully');
 
-    ctx.logger.info(`Successfully synced ${stripeProducts.length} products and ${stripePrices.length} prices from Stripe to database`);
+    ctx.logger.info(
+      `Successfully synced ${stripeProducts.length} products and ${stripePrices.length} prices from Stripe to database`
+    );
   } catch (error) {
-    ctx.logger.error('Error syncing Stripe subscription plans to database:', error);
+    ctx.logger.error(
+      'Error syncing Stripe subscription plans to database:',
+      error
+    );
     throw error;
   }
 }

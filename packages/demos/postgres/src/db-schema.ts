@@ -1,10 +1,10 @@
 import {
+  boolean,
+  integer,
+  jsonb,
   pgTable,
   text,
-  integer,
-  boolean,
   timestamp,
-  jsonb,
 } from 'drizzle-orm/pg-core';
 
 // Products table - mirrors the Stripe product structure

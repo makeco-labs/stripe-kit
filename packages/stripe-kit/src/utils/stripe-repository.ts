@@ -50,7 +50,9 @@ export async function listStripeProducts(
   options: { showAll?: boolean } = {}
 ): Promise<Stripe.Product[]> {
   const { showAll = false } = options;
-  ctx.logger.info(`Fetching ${showAll ? 'all' : 'managed'} products from Stripe...`);
+  ctx.logger.info(
+    `Fetching ${showAll ? 'all' : 'managed'} products from Stripe...`
+  );
 
   let hasMore = true;
   let startingAfter: string | undefined;
@@ -63,19 +65,20 @@ export async function listStripeProducts(
     });
 
     let productsToInclude: Stripe.Product[];
-    
+
     if (showAll) {
       // Include all products
       productsToInclude = response.data;
     } else {
       // Filter products that are managed by this tool
       productsToInclude = response.data.filter(
-        (product) => 
+        (product) =>
           product.metadata?.[ctx.config.metadata.productIdField] &&
-          product.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue
+          product.metadata?.[ctx.config.metadata.managedByField] ===
+            ctx.config.metadata.managedByValue
       );
     }
-    
+
     allStripeProducts = [...allStripeProducts, ...productsToInclude];
     hasMore = response.has_more;
     startingAfter = response.data.at(-1)?.id;
@@ -90,7 +93,9 @@ export async function listStripePrices(
   options: { showAll?: boolean } = {}
 ): Promise<Stripe.Price[]> {
   const { showAll = false } = options;
-  ctx.logger.info(`Fetching ${showAll ? 'all' : 'managed'} prices from Stripe...`);
+  ctx.logger.info(
+    `Fetching ${showAll ? 'all' : 'managed'} prices from Stripe...`
+  );
 
   let hasMore = true;
   let startingAfter: string | undefined;
@@ -103,7 +108,7 @@ export async function listStripePrices(
     });
 
     let pricesToInclude: Stripe.Price[];
-    
+
     if (showAll) {
       // Include all prices
       pricesToInclude = response.data;
@@ -112,10 +117,11 @@ export async function listStripePrices(
       pricesToInclude = response.data.filter(
         (price) =>
           price.metadata?.[ctx.config.metadata.priceIdField] &&
-          price.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue
+          price.metadata?.[ctx.config.metadata.managedByField] ===
+            ctx.config.metadata.managedByValue
       );
     }
-    
+
     allStripePrices = [...allStripePrices, ...pricesToInclude];
     hasMore = response.has_more;
     startingAfter = response.data.at(-1)?.id;

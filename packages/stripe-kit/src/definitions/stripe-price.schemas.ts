@@ -1,6 +1,5 @@
-import { z } from 'zod';
-
 import type Stripe from 'stripe';
+import { z } from 'zod';
 
 // ========================================================================
 // NESTED STRIPE PRICE SCHEMAS
@@ -63,35 +62,35 @@ export const stripePriceSchema = z.object({
   // Required fields
   id: z.string(),
   currency: z.string().length(3),
-  
+
   // Core pricing
   unitAmount: z.number().min(0).optional(),
   unitAmountDecimal: z.string().optional(),
-  
+
   // Price type and billing
   type: z.enum(['one_time', 'recurring']).default('recurring'),
   billingScheme: z.enum(['per_unit', 'tiered']).default('per_unit'),
-  
+
   // Recurring configuration
   recurring: recurringSchema.optional(),
-  
+
   // Advanced pricing
   tiers: z.array(tierSchema).optional(),
   tiersMode: z.enum(['graduated', 'volume']).optional(),
   transformQuantity: transformQuantitySchema.optional(),
-  
+
   // Currency and localization
   currencyOptions: z.record(z.string(), currencyOptionsSchema).optional(),
   customUnitAmount: customUnitAmountSchema.optional(),
-  
+
   // Tax and compliance
   taxBehavior: z.enum(['exclusive', 'inclusive', 'unspecified']).optional(),
-  
+
   // Display and organization
   nickname: z.string().optional(),
   lookupKey: z.string().max(200).optional(),
   active: z.boolean().default(true),
-  
+
   // Extensibility
   metadata: z.record(z.string(), z.string()).optional(),
 });

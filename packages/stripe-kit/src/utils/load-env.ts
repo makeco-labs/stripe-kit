@@ -2,33 +2,31 @@ import fs from 'node:fs';
 import path from 'node:path';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-
-import { findEnvDirectories } from './find-env-directories';
-
 import type { EnvironmentKey } from '../definitions';
+import { findEnvDirectories } from './find-env-directories';
 
 /**
  * Gets environment file patterns for a specific environment
  */
 function getEnvFilePatterns(env: string): string[] {
-	const patterns: Record<string, string[]> = {
-		dev: [
-			".env.dev.local",
-			".env.development.local",
-			".env.dev",
-			".env.development",
-		],
-		test: [".env.test.local", ".env.test"],
-		staging: [".env.staging.local", ".env.staging"],
-		prod: [
-			".env.prod.local",
-			".env.production.local",
-			".env.prod",
-			".env.production",
-		],
-	};
+  const patterns: Record<string, string[]> = {
+    dev: [
+      '.env.dev.local',
+      '.env.development.local',
+      '.env.dev',
+      '.env.development',
+    ],
+    test: ['.env.test.local', '.env.test'],
+    staging: ['.env.staging.local', '.env.staging'],
+    prod: [
+      '.env.prod.local',
+      '.env.production.local',
+      '.env.prod',
+      '.env.production',
+    ],
+  };
 
-	return patterns[env] || [`.env.${env}.local`, `.env.${env}`];
+  return patterns[env] || [`.env.${env}.local`, `.env.${env}`];
 }
 
 /**
@@ -72,15 +70,13 @@ export function loadEnvironment(env: EnvironmentKey): void {
     console.warn(
       chalk.yellow(`⚠️  No environment files found for environment: ${env}`)
     );
-    console.log(
-      chalk.gray(`Searched in: ${searchedDirs.join(', ')}`)
-    );
-    console.log(
-      chalk.gray(`Expected files: ${envPatterns.join(', ')}`)
-    );
+    console.log(chalk.gray(`Searched in: ${searchedDirs.join(', ')}`));
+    console.log(chalk.gray(`Expected files: ${envPatterns.join(', ')}`));
   } else {
     console.log(
-      chalk.green(`✅ Loaded ${loadedFiles.length} environment file(s) for: ${env}`)
+      chalk.green(
+        `✅ Loaded ${loadedFiles.length} environment file(s) for: ${env}`
+      )
     );
   }
 }

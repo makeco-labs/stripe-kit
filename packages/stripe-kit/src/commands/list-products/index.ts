@@ -1,1 +1,0 @@
-export { listProducts } from './list-products.command'

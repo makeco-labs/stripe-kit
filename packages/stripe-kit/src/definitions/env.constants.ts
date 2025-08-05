@@ -6,10 +6,10 @@
  * Available environments as const for type safety
  */
 export const ENVIRONMENTS = {
-	TEST: "test",
-	DEV: "dev",
-	STAGING: "staging",
-	PROD: "prod",
+  TEST: 'test',
+  DEV: 'dev',
+  STAGING: 'staging',
+  PROD: 'prod',
 } as const;
 
 /**

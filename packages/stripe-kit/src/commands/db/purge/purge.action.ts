@@ -1,9 +1,9 @@
 import type { Context } from '@/definitions';
 
 /**
- * Clears all subscription plans from the database
+ * Purges all subscription plans from the database
  */
-export async function clearDbPlansAction(ctx: Context): Promise<void> {
+export async function purgeDbAction(ctx: Context): Promise<void> {
   ctx.logger.info('Clearing subscription plans from database...');
 
   try {

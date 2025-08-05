@@ -1,9 +1,7 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
-
-import { ENVIRONMENTS } from '../definitions';
-
 import type { EnvironmentKey } from '../definitions';
+import { ENVIRONMENTS } from '../definitions';
 
 /**
  * Requires confirmation for dangerous operations in production environment
@@ -21,7 +19,7 @@ export async function requireProductionConfirmation(input: {
 
   console.log(
     chalk.red.bold(
-      `\\n⚠️  WARNING: You are about to perform a ${action.toUpperCase()} operation on PRODUCTION Stripe!`
+      `\nWARNING: You are about to perform a ${action.toUpperCase()} operation on PRODUCTION Stripe!`
     )
   );
   console.log(

@@ -1,5 +1,5 @@
 import type { Context } from '@/definitions';
-import { listStripeProducts, listStripePrices } from '@/utils';
+import { listStripePrices, listStripeProducts } from '@/utils';
 
 // ========================================================================
 // PRIVATE FUNCTIONS
@@ -16,17 +16,22 @@ async function updateStripeProduct(
 ): Promise<void> {
   try {
     // Generate Stripe product parameters from the plan
-    const stripeProductParams = ctx.mappers.mapSubscriptionPlanToStripeProduct(plan);
+    const stripeProductParams =
+      ctx.mappers.mapSubscriptionPlanToStripeProduct(plan);
 
     // Find the product that matches our internal ID
     const stripeProduct = allStripeProducts.find(
       (product) =>
-        product.metadata?.[ctx.config.metadata.productIdField] === plan.product.id &&
-        product.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue
+        product.metadata?.[ctx.config.metadata.productIdField] ===
+          plan.product.id &&
+        product.metadata?.[ctx.config.metadata.managedByField] ===
+          ctx.config.metadata.managedByValue
     );
 
     if (!stripeProduct) {
-      ctx.logger.warn(`Stripe product not found for ${plan.product.id}. Skipping update.`);
+      ctx.logger.warn(
+        `Stripe product not found for ${plan.product.id}. Skipping update.`
+      );
       return;
     }
 
@@ -65,11 +70,14 @@ async function updateStripePrices(
       const stripePrice = allStripePrices.find(
         (price) =>
           price.metadata?.[ctx.config.metadata.priceIdField] === planPrice.id &&
-          price.metadata?.[ctx.config.metadata.managedByField] === ctx.config.metadata.managedByValue
+          price.metadata?.[ctx.config.metadata.managedByField] ===
+            ctx.config.metadata.managedByValue
       );
 
       if (!stripePrice) {
-        ctx.logger.warn(`Stripe price not found for ${planPrice.id}. Skipping update.`);
+        ctx.logger.warn(
+          `Stripe price not found for ${planPrice.id}. Skipping update.`
+        );
         continue;
       }
 
@@ -79,12 +87,15 @@ async function updateStripePrices(
           : stripePrice.product.id;
 
       // Generate price parameters
-      const stripePriceParams = ctx.mappers.mapSubscriptionPlanToStripePrice(planPrice, {
-        planName: plan.product.name,
-        tier: plan.product.id,
-        internalProductId: plan.product.id,
-        stripeProductId,
-      });
+      const stripePriceParams = ctx.mappers.mapSubscriptionPlanToStripePrice(
+        planPrice,
+        {
+          planName: plan.product.name,
+          tier: plan.product.id,
+          internalProductId: plan.product.id,
+          stripeProductId,
+        }
+      );
 
       // Only metadata and active status can be updated for prices
       await ctx.stripeClient.prices.update(stripePrice.id, {
@@ -113,9 +124,11 @@ async function updateStripePrices(
  * Since Stripe doesn't allow updating most fields for prices (like amounts),
  * this function only updates metadata and active status.
  */
-export async function updateStripeSubscriptionPlansAction(ctx: Context): Promise<void> {
+export async function updateStripeSubscriptionPlansAction(
+  ctx: Context
+): Promise<void> {
   const plans = ctx.config.plans;
-  
+
   ctx.logger.info(`Updating ${plans.length} subscription plans in Stripe...`);
 
   try {
@@ -123,12 +136,16 @@ export async function updateStripeSubscriptionPlansAction(ctx: Context): Promise
     const allStripeProducts = await listStripeProducts(ctx, { showAll: false });
     const allStripePrices = await listStripePrices(ctx, { showAll: false });
 
-    ctx.logger.info(`Found ${allStripeProducts.length} managed products and ${allStripePrices.length} managed prices in Stripe`);
+    ctx.logger.info(
+      `Found ${allStripeProducts.length} managed products and ${allStripePrices.length} managed prices in Stripe`
+    );
 
     // Update each plan
     for (const plan of plans) {
-      ctx.logger.info(`Updating plan: ${plan.product.name} (Internal ID: ${plan.product.id})...`);
-      
+      ctx.logger.info(
+        `Updating plan: ${plan.product.name} (Internal ID: ${plan.product.id})...`
+      );
+
       // Update the product
       await updateStripeProduct(ctx, plan, allStripeProducts);
 

@@ -72,7 +72,6 @@ async function showUrlSelection(): Promise<void> {
     console.log(chalk.cyan(`\n${response.value.icon} ${response.value.name}:`));
     console.log(chalk.green(`   Live: ${response.value.live}`));
     console.log(chalk.yellow(`   Test: ${response.value.test}`));
-    
   } catch (error) {
     console.error(chalk.red('Error during URL selection:'), error);
     process.exit(1);
@@ -81,9 +80,9 @@ async function showUrlSelection(): Promise<void> {
 
 // ------------------ Main Action ------------------
 
-export async function showStripeUrlsAction(
-  options: { showAll: boolean }
-): Promise<void> {
+export async function showStripeUrlsAction(options: {
+  showAll: boolean;
+}): Promise<void> {
   const { showAll } = options;
 
   if (showAll) {
