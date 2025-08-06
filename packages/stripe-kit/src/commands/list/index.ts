@@ -1,3 +1,3 @@
 export * from './list.command';
-export * from './products';
 export * from './prices';
+export * from './products';

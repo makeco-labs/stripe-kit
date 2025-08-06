@@ -39,7 +39,7 @@ const STRIPE_URLS: StripeUrl[] = [
 
 // ------------------ Show All URLs ------------------
 
-async function showAllUrls(): Promise<void> {
+function showAllUrls(): void {
   console.log(chalk.blue.bold('\n🔗 Stripe Dashboard URLs:\n'));
 
   for (const urlItem of STRIPE_URLS) {
@@ -86,7 +86,7 @@ export async function showStripeUrlsAction(options: {
   const { showAll } = options;
 
   if (showAll) {
-    await showAllUrls();
+    showAllUrls();
   } else {
     await showUrlSelection();
   }

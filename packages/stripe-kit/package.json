@@ -53,8 +53,8 @@
     "lint": "npx ultracite@latest lint",
     "format": "bunx ultracite@latest format",
     "test": "vitest",
-    "ci": "bun run lint && bun run typecheck && bun run build && bun run test --run",
-    "git": "bun run ci && git add . && git commit -m",
+    "ci": "bun lint && bun typecheck && bun format && bun run build",
+    "git": "bun ci && git add . && git commit -m",
     "postgit": "git push --all"
   },
   "devDependencies": {

@@ -44,7 +44,12 @@ export async function runPurgeDbPreflight(
   const ctx = createContext({ adapter: adapterResult.adapter, config });
 
   // Verify adapter has required methods
-  if (!(typeof ctx.adapter.clearProducts === 'function' && typeof ctx.adapter.clearPrices === 'function')) {
+  if (
+    !(
+      typeof ctx.adapter.clearProducts === 'function' &&
+      typeof ctx.adapter.clearPrices === 'function'
+    )
+  ) {
     throw new Error(
       'Database adapter must implement clearProducts and clearPrices methods'
     );

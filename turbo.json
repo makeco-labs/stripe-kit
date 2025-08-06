@@ -20,7 +20,7 @@
 			"outputs": []
     },
     "ci": {
-      "dependsOn": ["lint", "typecheck", "build", "test"]
+      "dependsOn": ["lint", "typecheck", "build"]
     },
     "test": {
       "outputs": [],

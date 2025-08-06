@@ -1,4 +1,6 @@
-import type { Context } from '@/definitions';
+import type Stripe from 'stripe';
+
+import type { Context, SubscriptionPlan } from '@/definitions';
 import { listStripePrices, listStripeProducts } from '@/utils';
 
 // ========================================================================
@@ -11,8 +13,8 @@ import { listStripePrices, listStripeProducts } from '@/utils';
  */
 async function updateStripeProduct(
   ctx: Context,
-  plan: any,
-  allStripeProducts: any[]
+  plan: SubscriptionPlan,
+  allStripeProducts: Stripe.Product[]
 ): Promise<void> {
   try {
     // Generate Stripe product parameters from the plan
@@ -60,8 +62,8 @@ async function updateStripeProduct(
  */
 async function updateStripePrices(
   ctx: Context,
-  plan: any,
-  allStripePrices: any[]
+  plan: SubscriptionPlan,
+  allStripePrices: Stripe.Price[]
 ): Promise<void> {
   try {
     // For each price in the plan

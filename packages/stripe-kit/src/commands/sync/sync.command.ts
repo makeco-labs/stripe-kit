@@ -21,7 +21,7 @@ export const sync = new Command()
       await syncStripeSubscriptionPlansAction(ctx);
 
       console.log(chalk.green('\nOperation completed successfully.'));
-      
+
       // Ensure process exits
       process.exit(0);
     } catch (error) {

@@ -51,7 +51,12 @@ export async function runSyncPreflight(
   }
 
   // Verify adapter has required methods
-  if (!(typeof ctx.adapter.syncProducts === 'function' && typeof ctx.adapter.syncPrices === 'function')) {
+  if (
+    !(
+      typeof ctx.adapter.syncProducts === 'function' &&
+      typeof ctx.adapter.syncPrices === 'function'
+    )
+  ) {
     throw new Error(
       'Database adapter must implement syncProducts and syncPrices methods'
     );

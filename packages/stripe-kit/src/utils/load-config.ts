@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import chalk from 'chalk';
 import { z } from 'zod';
 
 import type { Config } from '@/definitions';

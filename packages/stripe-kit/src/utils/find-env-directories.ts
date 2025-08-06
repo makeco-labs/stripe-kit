@@ -3,49 +3,77 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /**
+ * Workspace indicators that suggest a monorepo structure
+ */
+const WORKSPACE_INDICATORS = [
+  'pnpm-workspace.yaml',
+  'lerna.json',
+  'nx.json',
+  'turbo.json',
+  'rush.json',
+];
+
+/**
+ * Check if directory contains workspace indicator files
+ */
+function hasWorkspaceIndicators(dir: string): boolean {
+  return WORKSPACE_INDICATORS.some((indicator) =>
+    fs.existsSync(path.join(dir, indicator))
+  );
+}
+
+/**
+ * Check if directory has monorepo structure (packages/apps with package.json)
+ */
+function hasMonorepoStructure(dir: string): boolean {
+  const packageJsonPath = path.join(dir, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    return false;
+  }
+
+  const commonDirs = ['packages', 'apps'];
+
+  for (const dirName of commonDirs) {
+    const dirPath = path.join(dir, dirName);
+    if (
+      fs.existsSync(dirPath) &&
+      fs.statSync(dirPath).isDirectory() &&
+      hasPackageJsonInSubdirs(dirPath)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Check if any subdirectory contains package.json
+ */
+function hasPackageJsonInSubdirs(dir: string): boolean {
+  const subdirs = fs.readdirSync(dir);
+  return subdirs.some((subdir) => {
+    const subdirPath = path.join(dir, subdir);
+    const subPackageJson = path.join(subdirPath, 'package.json');
+    return fs.existsSync(subPackageJson);
+  });
+}
+
+/**
  * Detects if we're in a monorepo by looking for workspace indicators
  */
 function detectWorkspaceRoot(startDir: string): string | null {
-  const workspaceIndicators = [
-    'pnpm-workspace.yaml',
-    'lerna.json',
-    'nx.json',
-    'turbo.json',
-    'rush.json',
-  ];
-
   let currentDir = startDir;
   const maxDepth = 10; // Prevent infinite loops
   let depth = 0;
 
   while (depth < maxDepth) {
-    // Check for workspace indicators
-    for (const indicator of workspaceIndicators) {
-      const indicatorPath = path.join(currentDir, indicator);
-      if (fs.existsSync(indicatorPath)) {
-        return currentDir;
-      }
-    }
-
-    // Check for multiple package.json files (another monorepo indicator)
-    const packageJsonPath = path.join(currentDir, 'package.json');
-    if (fs.existsSync(packageJsonPath)) {
-      // Look for packages/ or apps/ directories
-      const commonDirs = ['packages', 'apps'];
-      for (const dir of commonDirs) {
-        const dirPath = path.join(currentDir, dir);
-        if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
-          // Check if this directory contains subdirectories with package.json
-          const subdirs = fs.readdirSync(dirPath);
-          for (const subdir of subdirs) {
-            const subdirPath = path.join(dirPath, subdir);
-            const subPackageJson = path.join(subdirPath, 'package.json');
-            if (fs.existsSync(subPackageJson)) {
-              return currentDir; // Found monorepo structure
-            }
-          }
-        }
-      }
+    // Check for workspace indicators or monorepo structure
+    if (
+      hasWorkspaceIndicators(currentDir) ||
+      hasMonorepoStructure(currentDir)
+    ) {
+      return currentDir;
     }
 
     // Move up one directory

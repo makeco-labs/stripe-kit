@@ -34,9 +34,9 @@ export function loadUserPreferences(): UserPreferences {
 
 // ------------------ Save User Preferences ------------------
 
-export function saveUserPreference(
-  key: keyof UserPreferences,
-  value: string
+export function saveUserPreference<K extends keyof UserPreferences>(
+  key: K,
+  value: UserPreferences[K]
 ): void {
   try {
     // Ensure config directory exists
@@ -48,7 +48,7 @@ export function saveUserPreference(
     const preferences = loadUserPreferences();
 
     // Update the specific preference
-    preferences[key] = value as any;
+    preferences[key] = value;
 
     // Save back to file
     writeFileSync(CONFIG_FILE, JSON.stringify(preferences, null, 2));

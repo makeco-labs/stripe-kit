@@ -6,7 +6,7 @@ import { loadUserPreferences } from '@/utils';
 export const config = new Command()
   .name('config')
   .description('View current user preferences')
-  .action(async () => {
+  .action(() => {
     try {
       const preferences = loadUserPreferences();
 

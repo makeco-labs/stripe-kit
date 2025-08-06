@@ -2,10 +2,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 
 import { purgeDbAction } from './purge.action';
-import {
-  type PurgeDbOptions,
-  runPurgeDbPreflight,
-} from './purge.preflight';
+import { type PurgeDbOptions, runPurgeDbPreflight } from './purge.preflight';
 
 export const purge = new Command()
   .name('purge')
