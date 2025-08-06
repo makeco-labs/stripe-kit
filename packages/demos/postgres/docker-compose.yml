@@ -1,6 +1,6 @@
 name: stripe-kit-dev
 
-# Test databases for db-cli development and examples
+# Test databases for stripe-kit development and examples
 # Usage: docker compose up -d
 
 services:
