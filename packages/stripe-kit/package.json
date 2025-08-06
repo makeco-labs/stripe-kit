@@ -58,8 +58,10 @@
     "postgit": "git push --all"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.0.0",
     "@types/prompts": "^2.4.9",
+    "better-sqlite3": "^12.2.0",
     "eslint": "^9.29.0",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
@@ -77,6 +79,6 @@
     "zod": "^4.0.14"
   },
   "peerDependencies": {
-    "drizzle-orm": ">=0.40.0"
+    "drizzle-orm": "^0.44.4"
   }
 }

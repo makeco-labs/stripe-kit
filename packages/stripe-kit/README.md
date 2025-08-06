@@ -25,7 +25,7 @@ stripe-kit create -e dev -a postgres
 stripe-kit archive -e prod -a postgres
 
 # Sync Stripe plans to database
-stripe-kit sync -e staging -a postgres
+stripe-kit db sync -e staging -a postgres
 
 # Update existing Stripe plans
 stripe-kit update -e prod -a postgres
@@ -84,6 +84,9 @@ stripe-kit db
 
 # Purge database plans
 stripe-kit db purge -e dev -a postgres
+
+# Sync Stripe plans to database
+stripe-kit db sync -e dev -a postgres
 ```
 
 ### List Operations

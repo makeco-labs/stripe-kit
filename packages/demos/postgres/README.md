@@ -32,32 +32,32 @@ This demo shows how to use `@makeco/stripe-kit` with PostgreSQL and Drizzle ORM 
 
 ### Create Stripe Products & Prices
 ```bash
-bun run stripe:create
+bun run stripe create
 ```
 
 ### List Stripe Items
 ```bash
 # List managed products only
-bun run stripe:list-products
+bun run stripe list products
 
 # List all products in Stripe account
-bun stripe:list-products --all
+bun run stripe list products --all
 
 # List managed prices only
-bun run stripe:list-prices
+bun run stripe list prices
 
 # List all prices in Stripe account
-bun stripe:list-prices --all
+bun run stripe list prices --all
 ```
 
 ### Sync to Database
 ```bash
-bun run stripe:sync
+bun run stripe db sync
 ```
 
 ### Archive Plans
 ```bash
-bun run stripe:archive
+bun run stripe archive
 ```
 
 ## Configuration

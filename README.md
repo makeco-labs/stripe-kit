@@ -48,7 +48,7 @@ stripe-kit create -e test
 stripe-kit archive -e staging
 
 # Sync plans to database
-stripe-kit sync -e dev -a postgres
+stripe-kit db sync -e dev -a postgres
 
 # Database operations
 stripe-kit db purge -e test -a postgres
