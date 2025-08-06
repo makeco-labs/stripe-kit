@@ -4,7 +4,7 @@
   "author": "makeco",
   "repository": {
     "type": "git",
-    "url": "https://github.com/makeco/stripe-kit.git"
+    "url": "https://github.com/makeco-labs/stripe-kit.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -20,7 +20,7 @@
     }
   },
   "bugs": {
-    "url": "https://github.com/makeco/stripe-kit/issues"
+    "url": "https://github.com/makeco-labs/stripe-kit/issues"
   },
   "description": "An unofficial CLI tool for creating, archiving, updating Stripe products and prices and syncing them to your database.",
   "files": [
@@ -29,7 +29,7 @@
     "LICENSE",
     "package.json"
   ],
-  "homepage": "https://github.com/makeco/stripe-kit",
+  "homepage": "https://github.com/makeco-labs/stripe-kit",
   "keywords": [
     "stripe",
     "billing",
