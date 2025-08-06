@@ -1,5 +1,10 @@
 # stripe-kit
 
+[![npm version](https://badge.fury.io/js/%40makeco%2Fstripe-kit.svg)](https://badge.fury.io/js/%40makeco%2Fstripe-kit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/makeco/stripe-kit)](https://github.com/makeco/stripe-kit/issues)
+[![GitHub stars](https://img.shields.io/github/stars/makeco/stripe-kit)](https://github.com/makeco/stripe-kit/stargazers)
+
 An unofficial CLI tool for managing Stripe subscription plans with database synchronization support.
 
 ## Installation
@@ -44,7 +49,7 @@ The CLI provides commands for managing Stripe subscription plans:
 # Create subscription plans
 stripe-kit create -e test
 
-# Archive subscription plans  
+# Archive subscription plans
 stripe-kit archive -e staging
 
 # Sync plans to database
