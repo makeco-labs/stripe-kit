@@ -43,27 +43,22 @@ bun run build
 
 ### Usage
 
-The CLI provides commands for managing Stripe subscription plans:
+```bash
+# Commands
+create        # Create subscription plans in Stripe
+archive       # Archive subscription plans in Stripe  
+update        # Update existing Stripe plans
+db sync       # Sync Stripe plans to database
+db purge      # Purge database plans
+list products # List Stripe products
+list prices   # List Stripe prices
+urls          # Show Stripe dashboard URLs
+config        # View current user preferences
 
-```sh
-# Create subscription plans
-stripe-kit create -e test
-
-# Archive subscription plans
-stripe-kit archive -e staging
-
-# Sync plans to database
-stripe-kit db sync -e dev -a postgres
-
-# Database operations
-stripe-kit db purge -e test -a postgres
-
-# List products and prices
-stripe-kit list products -e test
-stripe-kit list prices -e test
-
-# Quick access to Stripe dashboard URLs
-stripe-kit urls
+# Global Options
+-c, --config <path>         # Path to stripe.config.ts file (default: ./stripe.config.ts)
+-e, --env <environment>     # Target environment (test, dev, staging, prod)
+-a, --adapter <name>        # Database adapter name
 ```
 
 ## Features
@@ -76,24 +71,49 @@ stripe-kit urls
 
 ## Configuration
 
-Create a `stripe.config.js` file in your project root:
+Create a `stripe.config.ts` file in your project root:
 
-```js
-export default {
-  environments: {
-    test: { envFile: '.env.test' },
-    dev: { envFile: '.env.dev' },
-    staging: { envFile: '.env.staging' },
-    prod: { envFile: '.env.prod' }
-  },
-  plans: [
-    {
-      id: 'basic',
-      name: 'Basic Plan',
-      prices: [
-        { amount: 999, currency: 'usd', interval: 'month' }
-      ]
-    }
-  ]
-}
+```typescript
+import { defineConfig } from 'stripe-kit';
+
+export default defineConfig({
+	plans: [
+		{
+      // Stripe.Product (camelCase)
+			product: {
+				id: "pro-plan",
+				name: "Pro Plan",
+				description: "Professional features for growing teams",
+			},
+      // Stripe.Price[] (camelCase)
+			prices: [
+				{
+					id: "pro-monthly",
+					nickname: "Pro Monthly",
+					unitAmount: 2999,
+					currency: "usd",
+					recurring: { interval: "month" },
+				},
+				{
+					id: "pro-yearly",
+					nickname: "Pro Yearly",
+					unitAmount: 29999,
+					currency: "usd",
+					recurring: { interval: "year" },
+				},
+			],
+		},
+	],
+	adapters: {
+    // Custom property key. Can be postgres, sqlite, turso, myAdapter, etc.
+		postgres: {
+			syncProducts: async (products) => { /* Sync Stripe products to your database */ },
+			syncPrices: async (prices) => { /* Sync Stripe prices to your database */ },
+			clearProducts: async () => { /* Remove all products from your database */ },
+			clearPrices: async () => { /* Remove all prices from your database */ },
+			getProducts: async () => { /* Optional: Return all products from your database */ },
+			getPrices: async () => { /* Optional: Return all prices from your database */ }
+		},
+	},
+});
 ```
