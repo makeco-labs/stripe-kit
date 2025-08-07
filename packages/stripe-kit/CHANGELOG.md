@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2025-08-07
+
+### Fixed
+- **README:** Corrected adapter configuration example to show required methods instead of misleading connectionString
+- **Documentation:** Added proper adapter interface with syncProducts, syncPrices, clearProducts, clearPrices methods
+- **Developer Experience:** Clarified what methods developers need to implement in their database adapters
+
 ## [0.1.1] - 2025-08-07
 
 ### Changed

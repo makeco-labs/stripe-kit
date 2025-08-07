@@ -80,8 +80,12 @@ export default defineConfig({
 	adapters: {
     // Custom property key. Can be postgres, sqlite, turso, myAdapter, etc.
 		postgres: {
-			// Your PostgreSQL adapter configuration
-			connectionString: process.env.DATABASE_URL,
+			syncProducts: async (products) => { /* Sync Stripe products to your database */ },
+			syncPrices: async (prices) => { /* Sync Stripe prices to your database */ },
+			clearProducts: async () => { /* Remove all products from your database */ },
+			clearPrices: async () => { /* Remove all prices from your database */ },
+			getProducts: async () => { /* Optional: Return all products from your database */ },
+			getPrices: async () => { /* Optional: Return all prices from your database */ }
 		},
 	},
 });
