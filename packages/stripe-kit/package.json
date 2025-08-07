@@ -1,6 +1,6 @@
 {
   "name": "@makeco/stripe-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "makeco",
   "repository": {
     "type": "git",
@@ -50,7 +50,7 @@
     "build": "bun clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths && chmod +x dist/cli.js",
     "dev": "tsc -p tsconfig.build.json --watch",
     "dev:typecheck": "bun typecheck --watch --preserveWatchOutput",
-    "lint": "npx ultracite@latest lint",
+    "lint": "bunx ultracite@latest lint",
     "format": "bunx ultracite@latest format",
     "test": "vitest",
     "ci": "bun lint && bun typecheck && bun format && bun run build",
