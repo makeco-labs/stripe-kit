@@ -1,15 +1,17 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 
+import { ENV_CHOICES } from '@/definitions';
 import { purgeDbAction } from './purge.action';
 import { type PurgeDbOptions, runPurgeDbPreflight } from './purge.preflight';
 
 export const purge = new Command()
   .name('purge')
   .description('Delete subscription plans from database')
-  .option(
-    '-e, --env <environment>',
-    'Target environment (test, dev, staging, prod)'
+  .addOption(
+    new Option('-e, --env <environment>', 'Target environment').choices(
+      ENV_CHOICES
+    )
   )
   .option('-a, --adapter <name>', 'Database adapter name')
   .action(async (options: PurgeDbOptions, command) => {

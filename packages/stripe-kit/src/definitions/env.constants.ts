@@ -18,6 +18,11 @@ export const ENVIRONMENTS = {
 export const VALID_ENVIRONMENTS = Object.values(ENVIRONMENTS);
 
 /**
+ * Valid environment choices for Commander.js options
+ */
+export const ENV_CHOICES = VALID_ENVIRONMENTS as readonly string[];
+
+/**
  * Type derived from the ENVIRONMENTS const
  */
 export type EnvironmentKey = (typeof ENVIRONMENTS)[keyof typeof ENVIRONMENTS];

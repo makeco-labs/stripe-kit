@@ -1,15 +1,17 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 
+import { ENV_CHOICES } from '@/definitions';
 import { updateStripeSubscriptionPlansAction } from './update.action';
 import { runUpdatePreflight, type UpdateOptions } from './update.preflight';
 
 export const update = new Command()
   .name('update')
   .description('Update Stripe subscription plans')
-  .option(
-    '-e, --env <environment>',
-    'Target environment (test, dev, staging, prod)'
+  .addOption(
+    new Option('-e, --env <environment>', 'Target environment').choices(
+      ENV_CHOICES
+    )
   )
   .option('-a, --adapter <name>', 'Database adapter name')
   .action(async (options: UpdateOptions, command) => {

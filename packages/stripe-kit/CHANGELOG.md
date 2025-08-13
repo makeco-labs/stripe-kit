@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2025-08-13
+
+### Improved
+- **CLI Options:** Enhanced environment option validation with choices constraint for better UX
+- **CLI Options:** Standardized all environment options to use `.choices()` with immediate validation
+- **Developer Experience:** Clear error messages for invalid environment choices (e.g., 'production' vs 'prod')
+- **Help Text:** Environment options now display valid choices in help output
+
+### Fixed
+- **Validation:** Environment flags now provide immediate feedback instead of failing later in execution
+- **Consistency:** All commands now follow the same validation pattern
+
+### Technical
+- **Validation:** Added `ENV_CHOICES` constant for reusable Commander.js validation
+- **Code Quality:** Updated all 7 commands with environment options to use consistent validation
+
 ## [0.1.2] - 2025-08-07
 
 ### Fixed

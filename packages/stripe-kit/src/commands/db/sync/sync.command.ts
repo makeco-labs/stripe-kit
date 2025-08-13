@@ -1,15 +1,17 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 
+import { ENV_CHOICES } from '@/definitions';
 import { syncStripeSubscriptionPlansAction } from './sync.action';
 import { runSyncPreflight, type SyncOptions } from './sync.preflight';
 
 export const sync = new Command()
   .name('sync')
   .description('Sync Stripe subscription plans to database')
-  .option(
-    '-e, --env <environment>',
-    'Target environment (test, dev, staging, prod)'
+  .addOption(
+    new Option('-e, --env <environment>', 'Target environment').choices(
+      ENV_CHOICES
+    )
   )
   .option('-a, --adapter <name>', 'Database adapter name')
   .action(async (options: SyncOptions, command) => {

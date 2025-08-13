@@ -1,6 +1,7 @@
 import chalk from 'chalk';
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 
+import { ENV_CHOICES } from '@/definitions';
 import { listStripeProductsAction } from './products.action';
 import {
   type ListProductsOptions,
@@ -10,9 +11,10 @@ import {
 export const products = new Command()
   .name('products')
   .description('List Stripe products')
-  .option(
-    '-e, --env <environment>',
-    'Target environment (test, dev, staging, prod)'
+  .addOption(
+    new Option('-e, --env <environment>', 'Target environment').choices(
+      ENV_CHOICES
+    )
   )
   .option('--all', 'Show all items in Stripe account')
   .action(async (options: ListProductsOptions, command) => {
