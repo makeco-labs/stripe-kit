@@ -7,55 +7,83 @@ import type { Config } from '@/definitions';
 import { configSchema } from '@/definitions';
 
 // ========================================================================
-// TYPESCRIPT COMPILATION UTILITIES
-// ========================================================================
-
-const safeRegister = async () => {
-  const { register } = await import('esbuild-register/dist/node');
-  let res: { unregister: () => void };
-  try {
-    res = register({
-      format: 'cjs',
-      loader: 'ts',
-    });
-  } catch {
-    // tsx fallback
-    res = {
-      unregister: () => {
-        // No-op for tsx fallback
-      },
-    };
-  }
-  return res;
-};
-
-// ========================================================================
 // CONFIG LOADING UTILITIES
 // ========================================================================
+
+/**
+ * Loads a TypeScript config file by transpiling to ESM and using dynamic import
+ */
+async function loadTypeScriptConfig(tsPath: string): Promise<unknown> {
+  const esbuild = await import('esbuild');
+  const { pathToFileURL } = await import('node:url');
+
+  // Create temporary ESM file path
+  const tempPath = tsPath.replace('.ts', '.temp.mjs');
+
+  try {
+    // Transpile TypeScript to ESM with minimal bundling
+    await esbuild.build({
+      entryPoints: [tsPath],
+      outfile: tempPath,
+      format: 'esm',
+      platform: 'node',
+      bundle: true,
+      target: 'node18',
+      // Only exclude things that MUST not be bundled
+      external: [
+        '@makeco/stripe-kit', // Don't bundle the CLI itself
+        // Node.js built-ins should never be bundled
+        'node:*',
+        'fs',
+        'path',
+        'crypto',
+        'util',
+        'stream',
+        'events',
+        'buffer',
+        'process',
+      ],
+      // Optimize bundle size
+      treeShaking: true,
+      minify: false, // Keep readable for debugging
+    });
+
+    // Import the transpiled ESM file
+    const fileUrl = pathToFileURL(tempPath).href;
+    const imported = await import(fileUrl);
+
+    return imported.default ?? imported;
+  } finally {
+    // Cleanup temp file
+    await fs.promises.unlink(tempPath).catch(() => {
+      // Ignore cleanup errors
+    });
+  }
+}
 
 /**
  * Loads a config file using the appropriate method based on file extension
  */
 async function loadConfigFile(absolutePath: string): Promise<unknown> {
-  const { unregister } = await safeRegister();
-
-  let config: unknown;
   const ext = path.extname(absolutePath);
+  let config: unknown;
 
-  if (ext === '.cjs') {
-    // Use createRequire only for .cjs files
+  if (ext === '.ts') {
+    // TypeScript: transpile to temp ESM file, then dynamic import
+    config = await loadTypeScriptConfig(absolutePath);
+  } else if (ext === '.cjs') {
+    // CommonJS: use createRequire
     const require = createRequire(import.meta.url);
     const required = require(absolutePath);
     config = required.default ?? required;
   } else {
-    // Use dynamic import for .ts, .js, .mjs (handles ESM properly)
+    // JavaScript/ESM: direct dynamic import
     const { pathToFileURL } = await import('node:url');
     const fileUrl = pathToFileURL(absolutePath).href;
     const imported = await import(fileUrl);
     config = imported.default ?? imported;
   }
 
-  unregister();
   return config;
 }
 

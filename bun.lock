@@ -13,6 +13,32 @@
         "typescript": "^5",
       },
     },
+    "packages/demos/esm/db": {
+      "name": "@demo/esm-db",
+      "version": "1.0.0",
+      "dependencies": {
+        "drizzle-orm": "^0.44.4",
+        "postgres": "^3.4.0",
+      },
+      "devDependencies": {
+        "@types/pg": "^8.10.0",
+        "typescript": "^5.0.0",
+      },
+      "peerDependencies": {
+        "@makeco/stripe-kit": "workspace:*",
+      },
+    },
+    "packages/demos/esm/server": {
+      "name": "@demo/esm-server",
+      "version": "1.0.0",
+      "dependencies": {
+        "@demo/esm-db": "workspace:*",
+        "@makeco/stripe-kit": "workspace:*",
+      },
+      "devDependencies": {
+        "typescript": "^5.0.0",
+      },
+    },
     "packages/demos/postgres": {
       "name": "@demo/postgres",
       "version": "1.0.0",
@@ -31,7 +57,7 @@
     },
     "packages/stripe-kit": {
       "name": "@makeco/stripe-kit",
-      "version": "0.1.0",
+      "version": "0.1.4",
       "bin": {
         "stripe-kit": "./dist/cli.js",
       },
@@ -82,6 +108,10 @@
     "@clack/core": ["@clack/core@0.5.0", "", { "dependencies": { "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-p3y0FIOwaYRUPRcMO7+dlmLh8PSRcrjuTndsiA0WAFbWES0mLZlrjVoBRZ9DzkPFJZG6KGkJmoEAY0ZcVWTkow=="],
 
     "@clack/prompts": ["@clack/prompts@0.11.0", "", { "dependencies": { "@clack/core": "0.5.0", "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-pMN5FcrEw9hUkZA4f+zLlzivQSeQf5dRGJjSUbvVYDLvpKCdQx5OaknvKzgbtXOizhP+SJJJjqEbOe55uKKfAw=="],
+
+    "@demo/esm-db": ["@demo/esm-db@workspace:packages/demos/esm/db"],
+
+    "@demo/esm-server": ["@demo/esm-server@workspace:packages/demos/esm/server"],
 
     "@demo/postgres": ["@demo/postgres@workspace:packages/demos/postgres"],
 

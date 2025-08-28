@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2025-08-28
+
+### Fixed
+- Fixed TypeScript config loading with ESM workspace packages using esbuild transpilation
+- Config files now bundle with dependencies to ensure proper module resolution
+
 ## [0.1.4] - 2025-08-28
 
 ### Fixed
