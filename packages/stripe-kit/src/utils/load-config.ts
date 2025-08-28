@@ -30,6 +30,69 @@ const safeRegister = async () => {
 };
 
 // ========================================================================
+// CONFIG LOADING UTILITIES
+// ========================================================================
+
+/**
+ * Loads a config file using the appropriate method based on file extension
+ */
+async function loadConfigFile(absolutePath: string): Promise<unknown> {
+  const { unregister } = await safeRegister();
+
+  let config: unknown;
+  const ext = path.extname(absolutePath);
+
+  if (ext === '.cjs') {
+    // Use createRequire only for .cjs files
+    const require = createRequire(import.meta.url);
+    const required = require(absolutePath);
+    config = required.default ?? required;
+  } else {
+    // Use dynamic import for .ts, .js, .mjs (handles ESM properly)
+    const { pathToFileURL } = await import('node:url');
+    const fileUrl = pathToFileURL(absolutePath).href;
+    const imported = await import(fileUrl);
+    config = imported.default ?? imported;
+  }
+
+  unregister();
+  return config;
+}
+
+/**
+ * Handles errors during config loading with enhanced messaging
+ */
+function handleConfigLoadError(error: unknown): never {
+  if (error instanceof z.ZodError) {
+    // In Zod v4, use the issues property instead of errors
+    const errorMessages = error.issues.map(
+      (err) => `${err.path.join('.')}: ${err.message}`
+    );
+    throw new Error(`Invalid stripe config file:\n${errorMessages.join('\n')}`);
+  }
+
+  // Enhanced error handling for module resolution issues
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  if (
+    errorMessage.includes('ERR_PACKAGE_PATH_NOT_EXPORTED') ||
+    errorMessage.includes('Cannot resolve module')
+  ) {
+    throw new Error(
+      'Failed to load stripe config file: ' +
+        errorMessage +
+        '\n\n' +
+        'This error often occurs when:\n' +
+        '- Your config file imports ESM-only packages\n' +
+        '- Workspace packages have complex export maps\n' +
+        '- There are module resolution conflicts\n\n' +
+        'Try checking your package.json exports and dependencies.'
+    );
+  }
+
+  throw new Error(`Failed to load stripe config file: ${error}`);
+}
+
+// ========================================================================
 // CONFIG DISCOVERY FUNCTIONS
 // ========================================================================
 
@@ -95,27 +158,13 @@ export async function loadConfig(input: {
 
   try {
     const absolutePath = path.resolve(resolvedConfigPath);
-
-    const { unregister } = await safeRegister();
-    const require = createRequire(import.meta.url);
-    const required = require(absolutePath);
-    const config = required.default ?? required;
-    unregister();
+    const config = await loadConfigFile(absolutePath);
 
     // Validate the configuration
     const validatedConfig = configSchema.parse(config);
 
     return validatedConfig;
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // In Zod v4, use the issues property instead of errors
-      const errorMessages = error.issues.map(
-        (err) => `${err.path.join('.')}: ${err.message}`
-      );
-      throw new Error(
-        `Invalid stripe config file:\n${errorMessages.join('\n')}`
-      );
-    }
-    throw new Error(`Failed to load stripe config file: ${error}`);
+    return handleConfigLoadError(error);
   }
 }

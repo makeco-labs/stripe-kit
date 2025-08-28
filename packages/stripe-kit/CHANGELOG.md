@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2025-08-28
+
+### Fixed
+- Fixed ESM import issues when config files reference workspace packages
+- Replaced createRequire() with dynamic imports for better ESM compatibility
+- Added enhanced error messages for module resolution conflicts
+
 ## [0.1.3] - 2025-08-13
 
 ### Improved
