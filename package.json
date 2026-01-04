@@ -1,31 +1,89 @@
 {
-	"name": "@makeco/stripe-kit-monorepo",
-	"module": "index.ts",
-	"type": "module",
-	"private": false,
-	"packageManager": "bun@1.2.17",
-	"workspaces": [
-		"packages/**"
-	],
-	"scripts": {
-		"clean": "turbo run clean",
-		"dev": "turbo run dev",
-		"build": "turbo run build",
-		"lint": "turbo run lint",
-		"typecheck": "turbo run typecheck",
-		"format": "turbo run format",
-		"test": "turbo run test",
-		"ci": "turbo run ci",
-		"git": "bun run ci && git add . && git commit -m",
-		"postgit": "git push --all"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.1.2",
-		"turbo": "^2.5.5",
-		"typescript": "5.8.3",
-		"ultracite": "5.1.2"
-	},
-	"peerDependencies": {
-		"typescript": "^5"
-	}
+  "name": "@makeco/stripe-kit",
+  "version": "0.2.0",
+  "author": "makeco",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makeco-labs/stripe-kit.git"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "stripe-kit": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/makeco-labs/stripe-kit/issues"
+  },
+  "description": "An unofficial CLI tool for creating, archiving, updating Stripe products and prices and syncing them to your database.",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "homepage": "https://github.com/makeco-labs/stripe-kit",
+  "keywords": [
+    "stripe",
+    "billing",
+    "subscription",
+    "cli",
+    "payments",
+    "typescript",
+    "saas"
+  ],
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "bun clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths && chmod +x dist/cli.js",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "dev:typecheck": "bun typecheck --watch --preserveWatchOutput",
+    "lint": "bunx ultracite@latest check",
+    "fix": "bunx ultracite@latest fix",
+    "test": "vitest",
+    "ci": "bun typecheck && bun run build",
+    "release": "semantic-release",
+    "git": "bun ci && git add . && git commit -m",
+    "postgit": "git push --all"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20.0.0",
+    "@types/prompts": "^2.4.9",
+    "better-sqlite3": "^12.2.0",
+    "eslint": "^9.29.0",
+    "semantic-release": "^25.0.2",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3",
+    "ultracite": "^5.1.2",
+    "vitest": "^3.2.4"
+  },
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.24.0",
+    "esbuild-register": "^3.6.0",
+    "prompts": "^2.4.2",
+    "stripe": "^18.4.0",
+    "zod": "^4.0.14"
+  },
+  "peerDependencies": {
+    "drizzle-orm": "^0.44.4"
+  }
 }
