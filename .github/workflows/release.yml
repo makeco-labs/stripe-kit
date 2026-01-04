@@ -41,18 +41,24 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Prepare for npm release
-        working-directory: packages/stripe-kit
+      - name: Prepare isolated release directory
         run: |
-          # Remove bun lockfiles that contain workspace: references
-          rm -f ../../bun.lock ../../bun.lockb
-          # Remove node_modules to avoid workspace symlinks
-          rm -rf node_modules
-          # Install dependencies with npm for release
+          # Create isolated directory outside of monorepo
+          mkdir -p /tmp/release-pkg
+
+          # Copy only the stripe-kit package files
+          cp -r packages/stripe-kit/* /tmp/release-pkg/
+          cp -r packages/stripe-kit/.releaserc.json /tmp/release-pkg/ 2>/dev/null || true
+
+          # Copy git history (needed for semantic-release)
+          cp -r .git /tmp/release-pkg/
+
+          # Install dependencies with npm in isolated directory
+          cd /tmp/release-pkg
           npm install --legacy-peer-deps
 
       - name: Release
-        working-directory: packages/stripe-kit
+        working-directory: /tmp/release-pkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
