@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/stripe-kit
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,6 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+        working-directory: .
 
       # - name: Run tests
       #   run: bun run test
