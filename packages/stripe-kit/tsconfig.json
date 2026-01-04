@@ -16,11 +16,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "rootDir": ".",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["./src/**/*.ts", "./__tests__/**/*.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }

@@ -4,12 +4,10 @@
   "description": "Example project using stripe-kit",
   "type": "module",
   "scripts": {
-    "stripe": "stripe-kit -c stripe.config.ts",
-    "db": "db -c db.config.ts"
+    "stripe": "bunx @makeco/stripe-kit -c stripe.config.ts",
+    "db": "bunx @makeco/db-cli -c db.config.ts"
   },
   "dependencies": {
-    "@makeco/db-cli": "^0.1.2",
-    "@makeco/stripe-kit": "workspace:*",
     "drizzle-orm": "^0.44.4",
     "postgres": "^3.4.0"
   },

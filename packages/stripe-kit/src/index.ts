@@ -1,2 +1,2 @@
-export * from './definitions';
-export { defineConfig } from './utils/define-config';
+export * from "./definitions";
+export { defineConfig } from "./utils/define-config";

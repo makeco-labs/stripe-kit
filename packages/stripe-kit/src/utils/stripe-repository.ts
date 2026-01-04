@@ -1,6 +1,6 @@
-import type Stripe from 'stripe';
+import type Stripe from "stripe";
 
-import type { Context } from '@/definitions';
+import type { Context } from "@/definitions";
 
 // ========================================================================
 // FIND OPERATIONS (PRECISE SEARCH)
@@ -9,7 +9,7 @@ import type { Context } from '@/definitions';
 // ------------------ FIND STRIPE PRODUCT ------------------
 export async function findStripeProduct(
   ctx: Context,
-  input: { internalProductId: string }
+  input: { internalProductId: string },
 ): Promise<Stripe.Product | null> {
   const { internalProductId } = input;
   const { metadata } = ctx.config;
@@ -26,7 +26,7 @@ export async function findStripeProduct(
 // ------------------ FIND STRIPE PRICE ------------------
 export async function findStripePrice(
   ctx: Context,
-  input: { internalPriceId: string; stripeProductId: string }
+  input: { internalPriceId: string; stripeProductId: string },
 ): Promise<Stripe.Price | null> {
   const { internalPriceId, stripeProductId } = input;
   const { metadata } = ctx.config;
@@ -47,11 +47,11 @@ export async function findStripePrice(
 // ------------------ LIST STRIPE PRODUCTS ------------------
 export async function listStripeProducts(
   ctx: Context,
-  options: { showAll?: boolean } = {}
+  options: { showAll?: boolean } = {},
 ): Promise<Stripe.Product[]> {
   const { showAll = false } = options;
   ctx.logger.info(
-    `Fetching ${showAll ? 'all' : 'managed'} products from Stripe...`
+    `Fetching ${showAll ? "all" : "managed"} products from Stripe...`,
   );
 
   let hasMore = true;
@@ -75,7 +75,7 @@ export async function listStripeProducts(
         (product) =>
           product.metadata?.[ctx.config.metadata.productIdField] &&
           product.metadata?.[ctx.config.metadata.managedByField] ===
-            ctx.config.metadata.managedByValue
+            ctx.config.metadata.managedByValue,
       );
     }
 
@@ -90,11 +90,11 @@ export async function listStripeProducts(
 // ------------------ LIST STRIPE PRICES ------------------
 export async function listStripePrices(
   ctx: Context,
-  options: { showAll?: boolean } = {}
+  options: { showAll?: boolean } = {},
 ): Promise<Stripe.Price[]> {
   const { showAll = false } = options;
   ctx.logger.info(
-    `Fetching ${showAll ? 'all' : 'managed'} prices from Stripe...`
+    `Fetching ${showAll ? "all" : "managed"} prices from Stripe...`,
   );
 
   let hasMore = true;
@@ -118,7 +118,7 @@ export async function listStripePrices(
         (price) =>
           price.metadata?.[ctx.config.metadata.priceIdField] &&
           price.metadata?.[ctx.config.metadata.managedByField] ===
-            ctx.config.metadata.managedByValue
+            ctx.config.metadata.managedByValue,
       );
     }
 

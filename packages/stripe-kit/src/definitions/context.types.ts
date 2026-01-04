@@ -1,7 +1,7 @@
-import type Stripe from 'stripe';
+import type Stripe from "stripe";
 
-import type { Config, StripeMappers } from './config.schemas';
-import type { DatabaseAdapter } from './database-adapter.schemas';
+import type { Config } from "./config.schemas";
+import type { DatabaseAdapter } from "./database-adapter.schemas";
 
 // ========================================================================
 // CONTEXT TYPES
@@ -17,7 +17,6 @@ export interface Logger {
 export interface Context {
   logger: Logger;
   env: Record<string, string | undefined>;
-  mappers: StripeMappers;
   adapter: DatabaseAdapter;
   stripeClient: Stripe;
   config: Config;

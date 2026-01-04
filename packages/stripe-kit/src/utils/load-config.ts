@@ -1,10 +1,10 @@
-import fs from 'node:fs';
-import { createRequire } from 'node:module';
-import path from 'node:path';
-import { z } from 'zod';
+import fs from "node:fs";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { z } from "zod";
 
-import type { Config } from '@/definitions';
-import { configSchema } from '@/definitions';
+import type { Config } from "@/definitions";
+import { configSchema } from "@/definitions";
 
 // ========================================================================
 // CONFIG LOADING UTILITIES
@@ -14,34 +14,34 @@ import { configSchema } from '@/definitions';
  * Loads a TypeScript config file by transpiling to ESM and using dynamic import
  */
 async function loadTypeScriptConfig(tsPath: string): Promise<unknown> {
-  const esbuild = await import('esbuild');
-  const { pathToFileURL } = await import('node:url');
+  const esbuild = await import("esbuild");
+  const { pathToFileURL } = await import("node:url");
 
   // Create temporary ESM file path
-  const tempPath = tsPath.replace('.ts', '.temp.mjs');
+  const tempPath = tsPath.replace(".ts", ".temp.mjs");
 
   try {
     // Transpile TypeScript to ESM with minimal bundling
     await esbuild.build({
       entryPoints: [tsPath],
       outfile: tempPath,
-      format: 'esm',
-      platform: 'node',
+      format: "esm",
+      platform: "node",
       bundle: true,
-      target: 'node18',
+      target: "node18",
       // Only exclude things that MUST not be bundled
       external: [
-        '@makeco/stripe-kit', // Don't bundle the CLI itself
+        "@makeco/stripe-kit", // Don't bundle the CLI itself
         // Node.js built-ins should never be bundled
-        'node:*',
-        'fs',
-        'path',
-        'crypto',
-        'util',
-        'stream',
-        'events',
-        'buffer',
-        'process',
+        "node:*",
+        "fs",
+        "path",
+        "crypto",
+        "util",
+        "stream",
+        "events",
+        "buffer",
+        "process",
       ],
       // Optimize bundle size
       treeShaking: true,
@@ -68,17 +68,17 @@ async function loadConfigFile(absolutePath: string): Promise<unknown> {
   const ext = path.extname(absolutePath);
   let config: unknown;
 
-  if (ext === '.ts') {
+  if (ext === ".ts") {
     // TypeScript: transpile to temp ESM file, then dynamic import
     config = await loadTypeScriptConfig(absolutePath);
-  } else if (ext === '.cjs') {
+  } else if (ext === ".cjs") {
     // CommonJS: use createRequire
     const require = createRequire(import.meta.url);
     const required = require(absolutePath);
     config = required.default ?? required;
   } else {
     // JavaScript/ESM: direct dynamic import
-    const { pathToFileURL } = await import('node:url');
+    const { pathToFileURL } = await import("node:url");
     const fileUrl = pathToFileURL(absolutePath).href;
     const imported = await import(fileUrl);
     config = imported.default ?? imported;
@@ -94,26 +94,26 @@ function handleConfigLoadError(error: unknown): never {
   if (error instanceof z.ZodError) {
     // In Zod v4, use the issues property instead of errors
     const errorMessages = error.issues.map(
-      (err) => `${err.path.join('.')}: ${err.message}`
+      (err) => `${err.path.join(".")}: ${err.message}`,
     );
-    throw new Error(`Invalid stripe config file:\n${errorMessages.join('\n')}`);
+    throw new Error(`Invalid stripe config file:\n${errorMessages.join("\n")}`);
   }
 
   // Enhanced error handling for module resolution issues
   const errorMessage = error instanceof Error ? error.message : String(error);
   if (
-    errorMessage.includes('ERR_PACKAGE_PATH_NOT_EXPORTED') ||
-    errorMessage.includes('Cannot resolve module')
+    errorMessage.includes("ERR_PACKAGE_PATH_NOT_EXPORTED") ||
+    errorMessage.includes("Cannot resolve module")
   ) {
     throw new Error(
-      'Failed to load stripe config file: ' +
+      "Failed to load stripe config file: " +
         errorMessage +
-        '\n\n' +
-        'This error often occurs when:\n' +
-        '- Your config file imports ESM-only packages\n' +
-        '- Workspace packages have complex export maps\n' +
-        '- There are module resolution conflicts\n\n' +
-        'Try checking your package.json exports and dependencies.'
+        "\n\n" +
+        "This error often occurs when:\n" +
+        "- Your config file imports ESM-only packages\n" +
+        "- Workspace packages have complex export maps\n" +
+        "- There are module resolution conflicts\n\n" +
+        "Try checking your package.json exports and dependencies.",
     );
   }
 
@@ -129,10 +129,10 @@ function handleConfigLoadError(error: unknown): never {
  */
 export function discoverStripeConfig(): string | null {
   const configPatterns = [
-    'stripe.config.ts',
-    'stripe.config.js',
-    'stripe.config.mjs',
-    'stripe.config.cjs',
+    "stripe.config.ts",
+    "stripe.config.js",
+    "stripe.config.mjs",
+    "stripe.config.cjs",
   ];
   const cwd = process.cwd();
 
@@ -161,19 +161,19 @@ export async function loadConfig(input: {
     // Auto-discovery: look for stripe.config files
     const discoveredConfig = discoverStripeConfig();
     if (!discoveredConfig) {
-      console.error('❌ Error: No stripe.config.ts file found.');
+      console.error("❌ Error: No stripe.config.ts file found.");
       console.error(
-        'Expected files: stripe.config.ts, stripe.config.js, stripe.config.mjs, or stripe.config.cjs'
+        "Expected files: stripe.config.ts, stripe.config.js, stripe.config.mjs, or stripe.config.cjs",
       );
-      console.error('Or specify a config file with --config flag');
-      console.error('');
-      console.error('Example stripe.config.ts:');
+      console.error("Or specify a config file with --config flag");
+      console.error("");
+      console.error("Example stripe.config.ts:");
       console.error(`import { defineConfig } from 'stripe-kit';`);
-      console.error('export default defineConfig({');
-      console.error('  plans: [...],');
-      console.error('  adapters: {...},');
-      console.error('  envFiles: {...}');
-      console.error('});');
+      console.error("export default defineConfig({");
+      console.error("  plans: [...],");
+      console.error("  adapters: {...},");
+      console.error("  envFiles: {...}");
+      console.error("});");
       process.exit(1);
     }
     resolvedConfigPath = discoveredConfig;

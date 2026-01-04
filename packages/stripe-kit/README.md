@@ -50,44 +50,56 @@ Create a `stripe.config.ts` file in your project root:
 import { defineConfig } from "stripe-kit";
 
 export default defineConfig({
-	plans: [
-		{
+  plans: [
+    {
       // Stripe.Product (camelCase)
-			product: {
-				id: "pro-plan",
-				name: "Pro Plan",
-				description: "Professional features for growing teams",
-			},
+      product: {
+        id: "pro-plan",
+        name: "Pro Plan",
+        description: "Professional features for growing teams",
+      },
       // Stripe.Price[] (camelCase)
-			prices: [
-				{
-					id: "pro-monthly",
-					nickname: "Pro Monthly",
-					unitAmount: 2999,
-					currency: "usd",
-					recurring: { interval: "month" },
-				},
-				{
-					id: "pro-yearly",
-					nickname: "Pro Yearly",
-					unitAmount: 29999,
-					currency: "usd",
-					recurring: { interval: "year" },
-				},
-			],
-		},
-	],
-	adapters: {
+      prices: [
+        {
+          id: "pro-monthly",
+          nickname: "Pro Monthly",
+          unitAmount: 2999,
+          currency: "usd",
+          recurring: { interval: "month" },
+        },
+        {
+          id: "pro-yearly",
+          nickname: "Pro Yearly",
+          unitAmount: 29999,
+          currency: "usd",
+          recurring: { interval: "year" },
+        },
+      ],
+    },
+  ],
+  adapters: {
     // Custom property key. Can be postgres, sqlite, turso, myAdapter, etc.
-		postgres: {
-			syncProducts: async (products) => { /* Sync Stripe products to your database */ },
-			syncPrices: async (prices) => { /* Sync Stripe prices to your database */ },
-			clearProducts: async () => { /* Remove all products from your database */ },
-			clearPrices: async () => { /* Remove all prices from your database */ },
-			getProducts: async () => { /* Optional: Return all products from your database */ },
-			getPrices: async () => { /* Optional: Return all prices from your database */ }
-		},
-	},
+    postgres: {
+      syncProducts: async (products) => {
+        /* Sync Stripe products to your database */
+      },
+      syncPrices: async (prices) => {
+        /* Sync Stripe prices to your database */
+      },
+      clearProducts: async () => {
+        /* Remove all products from your database */
+      },
+      clearPrices: async () => {
+        /* Remove all prices from your database */
+      },
+      getProducts: async () => {
+        /* Optional: Return all products from your database */
+      },
+      getPrices: async () => {
+        /* Optional: Return all prices from your database */
+      },
+    },
+  },
 });
 ```
 

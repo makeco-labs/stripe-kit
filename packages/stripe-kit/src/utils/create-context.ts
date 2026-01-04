@@ -1,7 +1,6 @@
-import type { Config, Context, DatabaseAdapter } from '@/definitions';
-import { createLogger } from './create-logger';
-import { createMappers } from './create-mappers';
-import { createStripeClient } from './stripe-client';
+import type { Config, Context, DatabaseAdapter } from "@/definitions";
+import { createLogger } from "./create-logger";
+import { createStripeClient } from "./stripe-client";
 
 /**
  * Creates the context object for executing stripe operations
@@ -20,13 +19,9 @@ export function createContext(input: {
     STRIPE_SECRET_KEY: stripeSecretKey,
   });
 
-  // Create mappers for Stripe operations
-  const mappers = createMappers(config);
-
   return {
     logger,
     stripeClient,
-    mappers,
     adapter,
     env: process.env,
     config,

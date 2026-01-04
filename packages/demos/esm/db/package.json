@@ -20,8 +20,5 @@
   "devDependencies": {
     "@types/pg": "^8.10.0",
     "typescript": "^5.0.0"
-  },
-  "peerDependencies": {
-    "@makeco/stripe-kit": "workspace:*"
   }
 }

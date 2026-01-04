@@ -12,20 +12,16 @@ if (!stripeSecretKey) {
 export default defineConfig({
   plans: [
     {
+      id: 'basic',
       product: {
-        id: 'basic',
         name: 'Basic Plan',
         description: 'ESM test plan',
         active: true,
         type: 'service',
-        marketingFeatures: [
+        marketing_features: [
           { name: '10 projects' },
           { name: 'Basic support' },
         ],
-        features: {
-          maxProjects: 10,
-          supportLevel: 'basic',
-        },
         metadata: {
           plan_category: 'paid',
           target_audience: 'individual',
@@ -35,13 +31,12 @@ export default defineConfig({
         {
           id: 'basic-monthly',
           currency: 'usd',
-          type: 'recurring',
-          billingScheme: 'per_unit',
-          unitAmount: 999, // $9.99
+          billing_scheme: 'per_unit',
+          unit_amount: 999, // $9.99
           recurring: {
             interval: 'month',
-            intervalCount: 1,
-            usageType: 'licensed',
+            interval_count: 1,
+            usage_type: 'licensed',
           },
           nickname: 'Basic Monthly',
           active: true,
@@ -61,11 +56,6 @@ export default defineConfig({
   // Use the server database adapter that imports from workspace package
   adapters: {
     postgres: serverDatabaseAdapter,
-  },
-
-  // Product mapping
-  productIds: {
-    basic: 'basic',
   },
 
   // Metadata configuration

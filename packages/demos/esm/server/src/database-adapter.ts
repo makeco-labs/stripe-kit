@@ -1,13 +1,14 @@
-import { db, products, prices } from '@demo/esm-db';
-import { eq } from 'drizzle-orm';
+import { db, eq, prices, products } from '@demo/esm-db';
+import Stripe from 'stripe';
 
 import type { DatabaseAdapter } from '@makeco/stripe-kit';
+
 /**
  * Server-side database adapter that imports from ESM workspace package
  * This should demonstrate the ESM import resolution issue
  */
 export const serverDatabaseAdapter: DatabaseAdapter = {
-  async syncProducts(stripeProducts) {
+  async syncProducts(stripeProducts: Stripe.Product[]) {
     for (const stripeProduct of stripeProducts) {
       const internalId = stripeProduct.metadata?.internal_product_id;
       if (!internalId) {
@@ -50,7 +51,7 @@ export const serverDatabaseAdapter: DatabaseAdapter = {
     }
   },
 
-  async syncPrices(stripePrices) {
+  async syncPrices(stripePrices: Stripe.Price[]) {
     for (const stripePrice of stripePrices) {
       const internalId = stripePrice.metadata?.internal_price_id;
       const internalProductId = stripePrice.metadata?.internal_product_id;

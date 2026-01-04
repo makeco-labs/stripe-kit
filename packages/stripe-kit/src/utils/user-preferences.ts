@@ -1,16 +1,16 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 
-import type { EnvironmentKey } from '@/definitions';
+import type { EnvironmentKey } from "@/definitions";
 
 export interface UserPreferences {
   defaultEnvironment?: EnvironmentKey;
   defaultAdapter?: string;
 }
 
-const CONFIG_DIR = join(homedir(), '.config', '@makeco', 'stripe-kit');
-const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
+const CONFIG_DIR = join(homedir(), ".config", "@makeco", "stripe-kit");
+const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 
 // ========================================================================
 // USER PREFERENCES MANAGEMENT
@@ -24,10 +24,10 @@ export function loadUserPreferences(): UserPreferences {
       return {};
     }
 
-    const content = readFileSync(CONFIG_FILE, 'utf-8');
+    const content = readFileSync(CONFIG_FILE, "utf-8");
     return JSON.parse(content) as UserPreferences;
   } catch {
-    console.warn('Warning: Could not load user preferences, using defaults');
+    console.warn("Warning: Could not load user preferences, using defaults");
     return {};
   }
 }
@@ -36,7 +36,7 @@ export function loadUserPreferences(): UserPreferences {
 
 export function saveUserPreference<K extends keyof UserPreferences>(
   key: K,
-  value: UserPreferences[K]
+  value: UserPreferences[K],
 ): void {
   try {
     // Ensure config directory exists

@@ -1,43 +1,48 @@
-import { z } from 'zod';
-import type { DatabaseAdapter } from './database-adapter.schemas';
-import { databaseAdapterSchema } from './database-adapter.schemas';
-import { stripePriceSchema } from './stripe-price.schemas';
-import { stripeProductSchema } from './stripe-product.schemas';
-import type { Prettify } from './utility.types';
+import type Stripe from "stripe";
+import { z } from "zod";
+
+import type { DatabaseAdapter } from "./database-adapter.schemas";
+import { databaseAdapterSchema } from "./database-adapter.schemas";
+
+import type { Prettify } from "./utility.types";
 
 // ========================================================================
-// SUBSCRIPTION PLAN SCHEMA (COMBINES PRODUCT + PRICES)
+// SUBSCRIPTION PLAN TYPE
 // ========================================================================
 
-export const subscriptionPlanSchema = z.object({
-  // Product configuration
-  product: stripeProductSchema,
+/**
+ * A subscription plan combines a Stripe product with its prices.
+ *
+ * Uses Stripe's native types directly - write your config using Stripe's
+ * exact API format (snake_case). The `id` fields are internal identifiers
+ * used to track which config items map to which Stripe resources.
+ */
+export interface SubscriptionPlan {
+  /**
+   * Internal product ID - stored in Stripe metadata for tracking.
+   * This is NOT the Stripe product ID (which is assigned by Stripe).
+   */
+  id: string;
 
-  // Associated prices
-  prices: z.array(stripePriceSchema).min(1),
-});
+  /**
+   * Product configuration using Stripe's native ProductCreateParams.
+   * @see https://docs.stripe.com/api/products/create
+   */
+  product: Stripe.ProductCreateParams;
 
-export type SubscriptionPlan = z.infer<typeof subscriptionPlanSchema>;
-
-// ========================================================================
-// STRIPE MAPPER TYPES
-// ========================================================================
-
-export interface StripePriceContext {
-  stripeProductId: string;
-  internalProductId: string;
-  planName: string;
-  tier: string;
-}
-
-export interface StripeMappers {
-  mapSubscriptionPlanToStripeProduct: (
-    plan: SubscriptionPlan
-  ) => import('stripe').Stripe.ProductCreateParams;
-  mapSubscriptionPlanToStripePrice: (
-    price: import('./stripe-price.schemas').StripePrice,
-    context: StripePriceContext
-  ) => import('stripe').Stripe.PriceCreateParams;
+  /**
+   * Price configurations using Stripe's native PriceCreateParams.
+   * The `product` field is added automatically at creation time.
+   *
+   * Each price needs an `id` field for internal tracking.
+   * @see https://docs.stripe.com/api/prices/create
+   */
+  prices: Array<
+    {
+      /** Internal price ID - stored in Stripe metadata for tracking */
+      id: string;
+    } & Omit<Stripe.PriceCreateParams, "product">
+  >;
 }
 
 // ========================================================================
@@ -45,7 +50,8 @@ export interface StripeMappers {
 // ========================================================================
 
 export const configSchema = z.object({
-  plans: z.array(subscriptionPlanSchema),
+  // Plans use Stripe's native types - validated at runtime by Stripe SDK
+  plans: z.array(z.any()),
   env: z.object({
     stripeSecretKey: z.string(),
   }),
@@ -53,21 +59,29 @@ export const configSchema = z.object({
   productIds: z.record(z.string(), z.string()).optional(),
   metadata: z
     .object({
-      productIdField: z.string().default('internal_product_id'),
-      priceIdField: z.string().default('internal_price_id'),
-      managedByField: z.string().default('managed_by'),
-      managedByValue: z.string().default('@makeco/stripe-kit'),
+      productIdField: z.string().default("internal_product_id"),
+      priceIdField: z.string().default("internal_price_id"),
+      managedByField: z.string().default("managed_by"),
+      managedByValue: z.string().default("@makeco/stripe-kit"),
     })
     .default({
-      productIdField: 'internal_product_id',
-      priceIdField: 'internal_price_id',
-      managedByField: 'managed_by',
-      managedByValue: '@makeco/stripe-kit',
+      productIdField: "internal_product_id",
+      priceIdField: "internal_price_id",
+      managedByField: "managed_by",
+      managedByValue: "@makeco/stripe-kit",
     }),
 });
 
 export type Config = Prettify<
-  Omit<z.infer<typeof configSchema>, 'adapters'> & {
+  Omit<z.infer<typeof configSchema>, "adapters" | "plans"> & {
     adapters: Record<string, DatabaseAdapter>;
+    plans: SubscriptionPlan[];
+  }
+>;
+
+export type ConfigInput = Prettify<
+  Omit<z.input<typeof configSchema>, "adapters" | "plans"> & {
+    adapters: Record<string, DatabaseAdapter>;
+    plans: SubscriptionPlan[];
   }
 >;

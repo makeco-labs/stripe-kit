@@ -1,5 +1,5 @@
-import type Stripe from 'stripe';
-import { z } from 'zod';
+import type Stripe from "stripe";
+import { z } from "zod";
 
 // ========================================================================
 // DATABASE ADAPTER TYPES & SCHEMAS
@@ -16,19 +16,19 @@ export interface DatabaseAdapter {
 
 // Schema for DatabaseAdapter - accepts any object with the required methods
 export const databaseAdapterSchema = z.object({
-  syncProducts: z.any().transform((t) => t as DatabaseAdapter['syncProducts']),
-  syncPrices: z.any().transform((t) => t as DatabaseAdapter['syncPrices']),
+  syncProducts: z.any().transform((t) => t as DatabaseAdapter["syncProducts"]),
+  syncPrices: z.any().transform((t) => t as DatabaseAdapter["syncPrices"]),
   clearProducts: z
     .any()
-    .transform((t) => t as DatabaseAdapter['clearProducts']),
-  clearPrices: z.any().transform((t) => t as DatabaseAdapter['clearPrices']),
+    .transform((t) => t as DatabaseAdapter["clearProducts"]),
+  clearPrices: z.any().transform((t) => t as DatabaseAdapter["clearPrices"]),
   getProducts: z
     .any()
-    .transform((t) => t as DatabaseAdapter['getProducts'])
+    .transform((t) => t as DatabaseAdapter["getProducts"])
     .optional(),
   getPrices: z
     .any()
-    .transform((t) => t as DatabaseAdapter['getPrices'])
+    .transform((t) => t as DatabaseAdapter["getPrices"])
     .optional(),
 });
 
