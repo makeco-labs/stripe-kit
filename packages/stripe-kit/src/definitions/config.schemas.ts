@@ -7,17 +7,21 @@ import { databaseAdapterSchema } from "./database-adapter.schemas";
 import type { Prettify } from "./utility.types";
 
 // ========================================================================
-// SUBSCRIPTION PLAN TYPE
+// PRICING PLAN TYPE
 // ========================================================================
 
 /**
- * A subscription plan combines a Stripe product with its prices.
+ * A pricing plan combines a Stripe product with its prices.
  *
- * Uses Stripe's native types directly - write your config using Stripe's
- * exact API format (snake_case). The `id` fields are internal identifiers
- * used to track which config items map to which Stripe resources.
+ * Supports both one-time and recurring prices. Uses Stripe's native types
+ * directly - write your config using Stripe's exact API format (snake_case).
+ * The `id` fields are internal identifiers used to track which config items
+ * map to which Stripe resources.
+ *
+ * For one-time prices: omit the `recurring` field
+ * For recurring prices: include `recurring` with `interval`, etc.
  */
-export interface SubscriptionPlan {
+export interface PricingPlan {
   /**
    * Internal product ID - stored in Stripe metadata for tracking.
    * This is NOT the Stripe product ID (which is assigned by Stripe).
@@ -75,13 +79,13 @@ export const configSchema = z.object({
 export type Config = Prettify<
   Omit<z.infer<typeof configSchema>, "adapters" | "plans"> & {
     adapters: Record<string, DatabaseAdapter>;
-    plans: SubscriptionPlan[];
+    plans: PricingPlan[];
   }
 >;
 
 export type ConfigInput = Prettify<
   Omit<z.input<typeof configSchema>, "adapters" | "plans"> & {
     adapters: Record<string, DatabaseAdapter>;
-    plans: SubscriptionPlan[];
+    plans: PricingPlan[];
   }
 >;

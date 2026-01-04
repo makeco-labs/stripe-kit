@@ -9,7 +9,7 @@ import {
   determineEnvironment,
   requireProductionConfirmation,
 } from "@/cli-prompts";
-import type { Context, EnvironmentKey, SubscriptionPlan } from "@/definitions";
+import type { Context, EnvironmentKey, PricingPlan } from "@/definitions";
 import { ENV_CHOICES } from "@/definitions";
 import {
   createContext,
@@ -30,7 +30,7 @@ interface CreateOptions {
 
 interface CreatePreflightResult {
   ctx: Context;
-  plans: SubscriptionPlan[];
+  plans: PricingPlan[];
   chosenEnv: EnvironmentKey;
 }
 
@@ -83,7 +83,7 @@ async function runCreatePreflight(
 
 function buildProductParams(
   ctx: Context,
-  plan: SubscriptionPlan,
+  plan: PricingPlan,
 ): Stripe.ProductCreateParams {
   const { metadata: metadataConfig } = ctx.config;
 
@@ -103,8 +103,8 @@ function buildProductParams(
 
 function buildPriceParams(
   ctx: Context,
-  plan: SubscriptionPlan,
-  price: SubscriptionPlan["prices"][number],
+  plan: PricingPlan,
+  price: PricingPlan["prices"][number],
   stripeProductId: string,
 ): Stripe.PriceCreateParams {
   const { metadata: metadataConfig } = ctx.config;
@@ -126,12 +126,12 @@ function buildPriceParams(
 // ACTION
 // ========================================================================
 
-async function ensureStripeSubscriptionPlans(
+async function ensureStripePricingPlans(
   ctx: Context,
-  input: { plans: SubscriptionPlan[] },
+  input: { plans: PricingPlan[] },
 ): Promise<void> {
   const { plans } = input;
-  ctx.logger.info("Ensuring Stripe subscription plans exist...");
+  ctx.logger.info("Ensuring Stripe pricing plans exist...");
 
   for (const plan of plans) {
     ctx.logger.info(
@@ -183,14 +183,14 @@ async function ensureStripeSubscriptionPlans(
       }
     } catch (error) {
       ctx.logger.error({
-        message: "Error ensuring subscription plan/prices in Stripe",
+        message: "Error ensuring pricing plan in Stripe",
         error,
         metadata: { planId: plan.id, planName: plan.product.name },
       });
       throw error;
     }
   }
-  ctx.logger.info("Finished ensuring Stripe subscription plans.");
+  ctx.logger.info("Finished ensuring Stripe pricing plans.");
 }
 
 // ========================================================================
@@ -199,7 +199,7 @@ async function ensureStripeSubscriptionPlans(
 
 export const create = new Command()
   .name("create")
-  .description("Create Stripe subscription plans (Idempotent)")
+  .description("Create Stripe pricing plans (Idempotent)")
   .addOption(
     new Option("-e, --env <environment>", "Target environment").choices(
       ENV_CHOICES,
@@ -212,7 +212,7 @@ export const create = new Command()
       const { ctx, plans } = await runCreatePreflight(options, command);
 
       // Execute the action
-      await ensureStripeSubscriptionPlans(ctx, { plans });
+      await ensureStripePricingPlans(ctx, { plans });
 
       console.log(chalk.green("\nOperation completed successfully."));
     } catch (error) {

@@ -113,8 +113,8 @@ async function runSyncPreflight(
 // SYNC ACTION
 // ========================================================================
 
-async function syncStripeSubscriptionPlansAction(ctx: Context): Promise<void> {
-  ctx.logger.info("Syncing Stripe subscription plans to database...");
+async function syncStripePricingPlansAction(ctx: Context): Promise<void> {
+  ctx.logger.info("Syncing Stripe pricing plans to database...");
 
   try {
     // Fetch managed products from Stripe (only those managed by this tool)
@@ -144,7 +144,7 @@ async function syncStripeSubscriptionPlansAction(ctx: Context): Promise<void> {
     );
   } catch (error) {
     ctx.logger.error(
-      "Error syncing Stripe subscription plans to database:",
+      "Error syncing Stripe pricing plans to database:",
       error,
     );
     throw error;
@@ -211,7 +211,7 @@ async function runPurgeDbPreflight(
 // ========================================================================
 
 async function purgeDbAction(ctx: Context): Promise<void> {
-  ctx.logger.info("Clearing subscription plans from database...");
+  ctx.logger.info("Clearing pricing plans from database...");
 
   try {
     // Clear prices first (due to foreign key constraints)
@@ -224,9 +224,9 @@ async function purgeDbAction(ctx: Context): Promise<void> {
     await ctx.adapter.clearProducts();
     ctx.logger.info("Products cleared successfully");
 
-    ctx.logger.info("All subscription plans cleared from database");
+    ctx.logger.info("All pricing plans cleared from database");
   } catch (error) {
-    ctx.logger.error("Error clearing subscription plans from database:", error);
+    ctx.logger.error("Error clearing pricing plans from database:", error);
     throw error;
   }
 }
@@ -237,7 +237,7 @@ async function purgeDbAction(ctx: Context): Promise<void> {
 
 const sync = new Command()
   .name("sync")
-  .description("Sync Stripe subscription plans to database")
+  .description("Sync Stripe pricing plans to database")
   .addOption(
     new Option("-e, --env <environment>", "Target environment").choices(
       ENV_CHOICES,
@@ -250,7 +250,7 @@ const sync = new Command()
       const { ctx } = await runSyncPreflight(options, command);
 
       // Execute the action
-      await syncStripeSubscriptionPlansAction(ctx);
+      await syncStripePricingPlansAction(ctx);
 
       console.log(chalk.green("\nOperation completed successfully."));
 
@@ -264,7 +264,7 @@ const sync = new Command()
 
 const purge = new Command()
   .name("purge")
-  .description("Delete subscription plans from database")
+  .description("Delete pricing plans from database")
   .addOption(
     new Option("-e, --env <environment>", "Target environment").choices(
       ENV_CHOICES,

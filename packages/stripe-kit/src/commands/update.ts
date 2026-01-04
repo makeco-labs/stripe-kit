@@ -9,7 +9,7 @@ import {
   determineEnvironment,
   requireProductionConfirmation,
 } from "@/cli-prompts";
-import type { Context, EnvironmentKey, SubscriptionPlan } from "@/definitions";
+import type { Context, EnvironmentKey, PricingPlan } from "@/definitions";
 import { ENV_CHOICES } from "@/definitions";
 import {
   createContext,
@@ -78,7 +78,7 @@ async function runUpdatePreflight(
   // Verify plans are configured
   if (!ctx.config.plans || ctx.config.plans.length === 0) {
     throw new Error(
-      "No subscription plans configured. Check your config file.",
+      "No pricing plans configured. Check your config file.",
     );
   }
 
@@ -100,7 +100,7 @@ async function runUpdatePreflight(
 
 function buildProductUpdateParams(
   ctx: Context,
-  plan: SubscriptionPlan,
+  plan: PricingPlan,
 ): Stripe.ProductUpdateParams {
   const { metadata: metadataConfig } = ctx.config;
 
@@ -122,8 +122,8 @@ function buildProductUpdateParams(
 
 function buildPriceUpdateParams(
   ctx: Context,
-  plan: SubscriptionPlan,
-  price: SubscriptionPlan["prices"][number],
+  plan: PricingPlan,
+  price: PricingPlan["prices"][number],
 ): Stripe.PriceUpdateParams {
   const { metadata: metadataConfig } = ctx.config;
 
@@ -146,7 +146,7 @@ function buildPriceUpdateParams(
 
 async function updateStripeProduct(
   ctx: Context,
-  plan: SubscriptionPlan,
+  plan: PricingPlan,
   allStripeProducts: Stripe.Product[],
 ): Promise<void> {
   try {
@@ -186,7 +186,7 @@ async function updateStripeProduct(
 
 async function updateStripePrices(
   ctx: Context,
-  plan: SubscriptionPlan,
+  plan: PricingPlan,
   allStripePrices: Stripe.Price[],
 ): Promise<void> {
   try {
@@ -225,14 +225,14 @@ async function updateStripePrices(
   }
 }
 
-// ------------------ Update Stripe Subscription Plans Action ------------------
+// ------------------ Update Stripe Pricing Plans Action ------------------
 
-async function updateStripeSubscriptionPlansAction(
+async function updateStripePricingPlansAction(
   ctx: Context,
 ): Promise<void> {
   const plans = ctx.config.plans;
 
-  ctx.logger.info(`Updating ${plans.length} subscription plans in Stripe...`);
+  ctx.logger.info(`Updating ${plans.length} pricing plans in Stripe...`);
 
   try {
     // Fetch all managed products and prices once to avoid multiple API calls
@@ -256,9 +256,9 @@ async function updateStripeSubscriptionPlansAction(
       await updateStripePrices(ctx, plan, allStripePrices);
     }
 
-    ctx.logger.info("Finished updating subscription plans in Stripe");
+    ctx.logger.info("Finished updating pricing plans in Stripe");
   } catch (error) {
-    ctx.logger.error("Error updating Stripe subscription plans:", error);
+    ctx.logger.error("Error updating Stripe pricing plans:", error);
     throw error;
   }
 }
@@ -269,7 +269,7 @@ async function updateStripeSubscriptionPlansAction(
 
 export const update = new Command()
   .name("update")
-  .description("Update Stripe subscription plans")
+  .description("Update Stripe pricing plans")
   .addOption(
     new Option("-e, --env <environment>", "Target environment").choices(
       ENV_CHOICES,
@@ -282,7 +282,7 @@ export const update = new Command()
       const { ctx } = await runUpdatePreflight(options, command);
 
       // Execute the action
-      await updateStripeSubscriptionPlansAction(ctx);
+      await updateStripePricingPlansAction(ctx);
 
       console.log(chalk.green("\nOperation completed successfully."));
     } catch (error) {

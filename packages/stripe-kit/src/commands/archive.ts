@@ -175,9 +175,9 @@ async function archiveStripePrices(
   }
 }
 
-// ------------------ Archive Stripe Subscription Plans ------------------
+// ------------------ Archive Stripe Pricing Plans ------------------
 
-async function archiveStripeSubscriptionPlans(
+async function archiveStripePricingPlans(
   ctx: Context,
   input: {
     internalProductIds: string[];
@@ -191,14 +191,14 @@ async function archiveStripeSubscriptionPlans(
   }
 
   ctx.logger.info(
-    `Archiving ${internalProductIds.length} subscription plans in Stripe...`,
+    `Archiving ${internalProductIds.length} pricing plans in Stripe...`,
   );
 
   await archiveStripeProducts(ctx, { internalProductIds });
   await archiveStripePrices(ctx, { internalProductIds });
 
   ctx.logger.info(
-    `Successfully archived ${internalProductIds.length} subscription plans in Stripe`,
+    `Successfully archived ${internalProductIds.length} pricing plans in Stripe`,
   );
 }
 
@@ -208,7 +208,7 @@ async function archiveStripeSubscriptionPlans(
 
 export const archive = new Command()
   .name("archive")
-  .description("Archive Stripe subscription plans")
+  .description("Archive Stripe pricing plans")
   .addOption(
     new Option("-e, --env <environment>", "Target environment").choices(
       ENV_CHOICES,
@@ -224,7 +224,7 @@ export const archive = new Command()
       );
 
       // Execute the action
-      await archiveStripeSubscriptionPlans(ctx, {
+      await archiveStripePricingPlans(ctx, {
         internalProductIds: productIdsToArchive,
       });
 
