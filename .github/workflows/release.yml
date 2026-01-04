@@ -41,6 +41,16 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Prepare for npm release
+        working-directory: packages/stripe-kit
+        run: |
+          # Remove bun lockfiles that contain workspace: references
+          rm -f ../../bun.lock ../../bun.lockb
+          # Remove node_modules to avoid workspace symlinks
+          rm -rf node_modules
+          # Install dependencies with npm for release
+          npm install --legacy-peer-deps
+
       - name: Release
         working-directory: packages/stripe-kit
         env:
